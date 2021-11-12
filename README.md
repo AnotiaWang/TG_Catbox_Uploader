@@ -1,8 +1,8 @@
 # <p align="center">🐱 TG_Catbox_Uploader</p>
 
-<p align="center">简单的 Node.js bot，可将 Telegram 的文件上传到 [Catbox.moe](https://catbox.moe)。</p>
+<p align="center">简单的 Node.js bot，可将 Telegram 的文件上传到 <a href="https://catbox.moe">Catbox.moe</a>。</p>
 
-<p align="center">A simple Node.js bot for uploading Telegram files to [Catbox.moe](https://catbox.moe).</p>
+<p align="center">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox.moe</a>.</p>
 
 ## Features
 
