@@ -1,4 +1,4 @@
-# <p align="center">TG_Catbox_Uploader</p>
+# <p align="center">🐱 TG_Catbox_Uploader</p>
 
 <p align="center">简单的 Node.js bot，可将 Telegram 的文件上传到 [Catbox.moe](https://catbox.moe)。</p>
 
@@ -12,6 +12,7 @@
 - [x] Customizable strings
 ## Deploy
 
+- Give me a star 😘
 - Clone this repo
 
 - Run the following command:
