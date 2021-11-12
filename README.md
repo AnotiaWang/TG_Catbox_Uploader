@@ -1,4 +1,4 @@
-# TG_Catbox_Uploader
+# <p align="center">TG_Catbox_Uploader</p>
 
 <p align="center">简单的 Node.js bot，可将 Telegram 的文件上传到 [Catbox.moe](https://catbox.moe)。</p>
 
@@ -27,7 +27,7 @@ node bot
 - `admin_id`: Admin ID (Usually yours. Get it from [GetIDs Bot](https://t.me/getidsbot)).
 - `logChannel`: Channel to store logs.
 - `defaultLang`: `zh_CN` / `en_US` Default language for your users.
-- `catbox_token`: [Optional] Catbox.moe token. If empty, bot will upload files anonymously.
+- `catbox_token`: [Optional] Catbox.moe token. If empty, bot will upload files anonymously. If specfied, you can manage the uploaded files in your Catbox account.
 
 ## Demo
 
