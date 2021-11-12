@@ -1,0 +1,21 @@
+{
+  "name": "tg_catboxuploader",
+  "version": "1.0.0",
+  "description": "A simple Telegram bot to upload files to catbox.moe",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "catbox"
+  ],
+  "author": "AnotiaWang",
+  "license": "MIT",
+  "dependencies": {
+    "catbox.moe": "^1.0.2",
+    "cron": "^1.8.2",
+    "node-telegram-bot-api": "^0.54.0"
+  }
+}
