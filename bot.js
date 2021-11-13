@@ -153,6 +153,8 @@ bot.on('message', (msg) => {
     }
     else if (msg.chat.type == 'group' || msg.chat.type == 'supergroup') {
         if (msg.text) {
+            if (msg.text.startsWith('/help'))
+                bot.sendMessage(user, strings[lang].help, { parse_mode: 'HTML', disable_web_page_preview: true });
             if (msg.text.startsWith('/settings')) {
                 bot.sendMessage(user, '⚙ ' + strings[lang].settings, {
                     parse_mode: 'HTML', reply_markup: {
