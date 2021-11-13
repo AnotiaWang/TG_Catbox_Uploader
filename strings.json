@@ -20,7 +20,8 @@
         "saveDataSuccess": "成功保存数据。",
         "hour": " 小时",
         "serviceError": "服务出现错误：{s}",
-        "animatedStickersNotSupported": "动态贴纸暂不支持。"
+        "animatedStickersNotSupported": "动态贴纸暂不支持。",
+        "fileNotDetected": "回复的消息中未发现可上传的文件。"
     },
     "en_US": {
         "name": "English",
@@ -43,6 +44,7 @@
         "saveDataSuccess": "Data saved.",
         "hour": " hour",
         "serviceError": "Service error: {s}",
-        "animatedStickersNotSupported": "Animated stickers are not supported."
+        "animatedStickersNotSupported": "Animated stickers are not supported.",
+        "fileNotDetected": "No uploadable file detected in the message."
     }
 }
