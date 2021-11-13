@@ -19,7 +19,8 @@
         "settings_setServiceSuccess": "√ 存储服务已设置为 {s}",
         "saveDataSuccess": "成功保存数据。",
         "hour": " 小时",
-        "serviceError": "服务出现错误：{s}"
+        "serviceError": "服务出现错误：{s}",
+        "animatedStickersNotSupported": "动态贴纸暂不支持。"
     },
     "en_US": {
         "name": "English",
@@ -41,6 +42,7 @@
         "settings_setServiceSuccess": "√ Storage service set to {s}",
         "saveDataSuccess": "Data saved.",
         "hour": " hour",
-        "serviceError": "Service error: {s}"
+        "serviceError": "Service error: {s}",
+        "animatedStickersNotSupported": "Animated stickers are not supported."
     }
 }

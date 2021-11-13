@@ -77,7 +77,7 @@ bot.on('message', (msg) => {
                 break;
         }
 
-        if (msg.document || msg.photo || msg.video || msg.audio) {
+        if (msg.document || msg.photo || msg.video || msg.audio || msg.sticker) {
             var dlFileID = '', fileSize = '';
             if (userPrefs[user].downladInProgress) {
                 bot.sendMessage(user, strings[lang].flood_protection, { reply_to_message_id: msg.message_id });
@@ -98,6 +98,14 @@ bot.on('message', (msg) => {
             else if (msg.audio) {
                 dlFileID = msg.audio.file_id;
                 fileSize = msg.audio.file_size;
+            }
+            else if(msg.sticker){
+                if(msg.sticker.is_animated){
+                    bot.sendMessage(user, strings[lang].animatedStickersNotSupported, { reply_to_message_id: msg.message_id });
+                    return;
+                }
+                dlFileID = msg.sticker.file_id;
+                fileSize = msg.sticker.file_size;
             }
             if (fileSize > 20 * 1024 * 1024) {
                 bot.sendMessage(user, strings[lang].err_FileTooBig);
@@ -174,7 +182,7 @@ bot.on('callback_query', (query) => {
             break;
         case 'setService_Catbox':
             userPrefs[user].Service = 'Catbox';
-            bot.editMessageText(strings[lang].settings_setServiceSuccess.replace('{s}', 'Litterbox'), {
+            bot.editMessageText(strings[lang].settings_setServiceSuccess.replace('{s}', 'Catbox'), {
                 chat_id: user,
                 message_id: query.message.message_id,
             })
