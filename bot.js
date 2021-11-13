@@ -9,6 +9,7 @@ const bot = new TelegramBot(config.token, { polling: true });
 const admin_id = config.admin_id;
 const logChannel = config.logChannel;
 const catbox = new CatBox.Catbox(config.catbox_token);
+const litterbox = new CatBox.Litterbox();
 var strings = require('./strings.json');
 var userPrefs = {};
 var autoSaveLogs = new CronJob('0 */5 * * * *', () => saveLogs());
@@ -35,8 +36,12 @@ bot.on('message', (msg) => {
             userPrefs[user] = {
                 lang: config.defaultLang,
                 downladInProgress: false,
+                Service: config.defaultService,
+                LitterBoxExpr: config.defaultLitterBoxExpr,
             };
         var lang = userPrefs[user].lang;
+        var service = userPrefs[user].Service;
+        var litterboxExpr = userPrefs[user].LitterBoxExpr;
         switch (msg.text) {
             case '/start':
                 bot.sendMessage(user, '🐱 <b>欢迎！请选择您的语言：\n\nWelcome! Please select a language:</b>', {
@@ -49,10 +54,12 @@ bot.on('message', (msg) => {
             case '/help':
                 bot.sendMessage(user, strings[lang].help, { parse_mode: 'HTML', disable_web_page_preview: true });
                 break;
-            case '/setlang':
-                bot.sendMessage(msg.from.id, '⚙ 请选择语言\nSelect your language', {
+            case '/settings':
+                bot.sendMessage(user, '⚙ ' + strings[lang].settings, {
                     parse_mode: 'HTML', reply_markup: {
-                        inline_keyboard: [[{ text: "简体中文", callback_data: "setlang_zh_CN" }, { text: "English", callback_data: "setlang_en_US" }]]
+                        inline_keyboard: [[{ text: strings[lang].settings_setLang, callback_data: 'settings_lang' }],
+                        [{ text: strings[lang].settings_setService, callback_data: 'settings_service' }],
+                        [{ text: strings[lang].settings_setLitterBoxExpr, callback_data: 'settings_litterboxexpr' }]]
                     }
                 });
                 break;
@@ -107,12 +114,25 @@ bot.on('message', (msg) => {
                     response.pipe(file);
                     file.on('finish', function () {
                         file.close();
-                        bot.sendMessage(user, strings[lang].uploading);
-                        catbox.upload('temp/' + user + path.extname(link)).then(function (result) {
-                            fs.rmSync('temp/' + user + path.extname(link));
-                            userPrefs[user].downladInProgress = false;
-                            bot.sendMessage(user, strings[lang].uploaded + result);
-                        });
+                        bot.sendMessage(user, strings[lang].uploading.replace('{s}', service));
+                        if (service == 'Catbox')
+                            catbox.upload('temp/' + user + path.extname(link)).then(function (result) {
+                                userPrefs[user].downladInProgress = false;
+                                if (result.match('https:\/\/'))
+                                    bot.sendMessage(user, strings[lang].uploaded + result);
+                                else
+                                    bot.sendMessage(user, strings[lang].serviceError.replace('{s}', result));
+                                fs.rmSync('temp/' + user + path.extname(link));
+                            });
+                        else if (service == 'Litterbox')
+                            litterbox.upload('temp/' + user + path.extname(link), litterboxExpr).then(function (result) {
+                                userPrefs[user].downladInProgress = false;
+                                if (result.match('https:\/\/'))
+                                    bot.sendMessage(user, strings[lang].uploaded + result);
+                                else
+                                    bot.sendMessage(user, strings[lang].serviceError.replace('{s}', result));
+                                fs.rmSync('temp/' + user + path.extname(link));
+                            });
                     });
                 });
             });
@@ -122,11 +142,94 @@ bot.on('message', (msg) => {
 
 bot.on('callback_query', (query) => {
     var user = query.from.id;
-    if (query.data == "setlang_zh_CN")
-        userPrefs[user].lang = "zh_CN";
-    else if (query.data == "setlang_en_US")
-        userPrefs[user].lang = "en_US";
     var lang = userPrefs[user].lang;
-    bot.answerCallbackQuery(query.id, { text: strings[lang].setSuccess });
-    bot.editMessageText(strings[lang].langSetText, { chat_id: query.from.id, message_id: query.message.message_id });
+    var hour = strings[lang].hour;
+    switch (query.data) {
+        case 'setlang_zh_CN':
+            userPrefs[user].lang = 'zh_CN';
+            bot.editMessageText(strings['zh_CN'].langSetText, { chat_id: query.from.id, message_id: query.message.message_id });
+            break;
+        case 'setlang_en_US':
+            userPrefs[user].lang = 'en_US';
+            bot.editMessageText(strings['en_US'].langSetText, { chat_id: query.from.id, message_id: query.message.message_id });
+            break;
+        case 'settings_lang':
+            bot.editMessageText(strings[lang].settings_setLang, {
+                chat_id: user,
+                message_id: query.message.message_id,
+                reply_markup: {
+                    inline_keyboard: [[{ text: '简体中文', callback_data: 'setlang_zh_CN' }, { text: 'English', callback_data: 'setlang_en_US' }]]
+                }
+            });
+            break;
+        case 'settings_service':
+            bot.editMessageText(strings[lang].settings_setService, {
+                chat_id: user,
+                message_id: query.message.message_id,
+                reply_markup: {
+                    inline_keyboard: [[{ text: 'Catbox', callback_data: 'setService_Catbox' }, { text: 'Litterbox', callback_data: 'setService_Litterbox' }]]
+                }
+            });
+            break;
+        case 'setService_Catbox':
+            userPrefs[user].Service = 'Catbox';
+            bot.editMessageText(strings[lang].settings_setServiceSuccess.replace('{s}', 'Litterbox'), {
+                chat_id: user,
+                message_id: query.message.message_id,
+            })
+            break;
+        case 'setService_Litterbox':
+            userPrefs[user].Service = 'Litterbox';
+            bot.editMessageText(strings[lang].settings_setServiceSuccess.replace('{s}', 'Litterbox'), {
+                chat_id: user,
+                message_id: query.message.message_id,
+                reply_markup: {
+                    inline_keyboard: [[{ text: strings[lang].settings_setLitterBoxExpr, callback_data: 'settings_litterboxexpr' }]]
+                }
+            });
+            break;
+        case 'settings_litterboxexpr':
+            bot.editMessageText(strings[lang].settings_setLitterBoxExpr, {
+                chat_id: user,
+                message_id: query.message.message_id,
+                reply_markup: {
+                    inline_keyboard: [[{ text: '1' + hour, callback_data: 'setLitterBoxExpr_1' }, { text: '12' + hour, callback_data: 'setLitterBoxExpr_2' }],
+                    [{ text: '24' + hour, callback_data: 'setLitterBoxExpr_3' }, { text: '72' + hour, callback_data: 'setLitterBoxExpr_4' }]]
+                }
+            });
+            break;
+        case 'setLitterBoxExpr_1':
+            userPrefs[user].litterBoxExpr = '1h';
+            bot.editMessageText(strings[lang].settings_setLitterBoxExprSuccess.replace('{s}', '1' + hour), {
+                chat_id: user,
+                message_id: query.message.message_id,
+            });
+            break;
+        case 'setLitterBoxExpr_2':
+            userPrefs[user].litterBoxExpr = '12h';
+            bot.editMessageText(strings[lang].settings_setLitterBoxExprSuccess.replace('{s}', '12' + hour), {
+                chat_id: user,
+                message_id: query.message.message_id,
+            });
+            break;
+        case 'setLitterBoxExpr_3':
+            userPrefs[user].litterBoxExpr = '24h';
+            bot.editMessageText(strings[lang].settings_setLitterBoxExprSuccess.replace('{s}', '24' + hour), {
+                chat_id: user,
+                message_id: query.message.message_id,
+            });
+            break;
+        case 'setLitterBoxExpr_4':
+            userPrefs[user].litterBoxExpr = '72h';
+            bot.editMessageText(strings[lang].settings_setLitterBoxExprSuccess.replace('{s}', '72' + hour), {
+                chat_id: user,
+                message_id: query.message.message_id,
+            });
+            break;
+        default:
+            break;
+    }
+    lang = userPrefs[user].lang;
+    if (!query.data.match('settings'))
+        bot.answerCallbackQuery(query.id, { text: strings[lang].setSuccess });
 });

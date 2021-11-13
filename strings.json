@@ -1,9 +1,9 @@
 {
     "zh_CN": {
         "name": "简体中文",
-        "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 catbox.moe ，并返回文件的分享链接。\n<b>单文件限制 20 MB。</b>上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a>。\n\n命令列表：\n/help - 显示帮助信息\n/setlang - 设置语言\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
+        "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 catbox.moe ，并返回文件的分享链接。\n<b>单文件限制 20 MB。</b>上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a>。\n\n命令列表：\n/help - 显示帮助信息\n/settings - 设置语言、存储服务、文件有效时长\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
         "downloading": "开始下载...",
-        "uploading": "文件下载完成，正在上传到 Catbox...",
+        "uploading": "文件下载完成，正在上传到 {s}...",
         "uploaded": "上传完成！文件链接 👇\n",
         "error": "上传失败！",
         "flood_protection": "请先等待当前文件上传完成。",
@@ -11,13 +11,21 @@
         "langSetText": "√ 已设置为简体中文。发送 /help 看看我能做什么！",
         "err_FileTooBig": "文件过大（> 20 MB），超出 Bot API 限制！",
         "reloadStringsSuccess": "✅ 已重新加载 strings.json",
-        "saveDataSuccess": "成功保存数据。"
+        "settings": "设置",
+        "settings_setLang": "设置语言",
+        "settings_setService": "设置存储服务",
+        "settings_setLitterBoxExpr": "设置 Litterbox 文件有效时长",
+        "settings_setLitterBoxExprSuccess": "时长已设置为 {s}。",
+        "settings_setServiceSuccess": "√ 存储服务已设置为 {s}",
+        "saveDataSuccess": "成功保存数据。",
+        "hour": " 小时",
+        "serviceError": "服务出现错误：{s}"
     },
     "en_US": {
         "name": "English",
-        "help": "🐱 <b>Welcome to Catbox Uploader!</b>\n\nThis bot can upload your files to catbox.moe and return the file's share link. \n<b>Single file limit 200 MB.</b> The files you uploaded mustn't violate the <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a>.\n\nCommands:\n/help - Send this help info\n/setlang - Choose a language\n\nTake a look at my channel @atashare and @atabots for interesting websites and update notes!\nSource Code：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
+        "help": "🐱 <b>Welcome to Catbox Uploader!</b>\n\nThis bot can upload your files to catbox.moe and return the file's share link. \n<b>Single file limit 200 MB.</b> The files you uploaded mustn't violate the <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a>.\n\nCommands:\n/help - Send this help info\n/settings - Choose a language, service or file expiration.\n\nTake a look at my channel @atashare and @atabots for interesting websites and update notes!\nSource Code：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
         "downloading": "Downloading...",
-        "uploading": "File downloaded successfully. Now uploading to Catbox...",
+        "uploading": "File downloaded successfully. Now uploading to {s}...",
         "uploaded": "Uploaded! Link 👇\n",
         "error": "Upload failed!",
         "flood_protection": "Please wait for the current file to finish uploading.",
@@ -25,6 +33,14 @@
         "langSetText": "√ Language set to English. Send /help to see what I can do! ",
         "err_FileTooBig": "File too big (> 20 MB)，exceeds Bot API limit!",
         "reloadStringsSuccess": "✅ Reloaded strings.json",
-        "saveDataSuccess": "Data saved."
+        "settings": "Settings",
+        "settings_setLang": "Set language",
+        "settings_setService": "Set storage service",
+        "settings_setLitterBoxExpr": "Set Litterbox file expiration",
+        "settings_setLitterBoxExprSuccess": "Expiration set to {s}.",
+        "settings_setServiceSuccess": "√ Storage service set to {s}",
+        "saveDataSuccess": "Data saved.",
+        "hour": " hour",
+        "serviceError": "Service error: {s}"
     }
 }

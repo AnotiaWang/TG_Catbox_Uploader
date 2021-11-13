@@ -3,5 +3,7 @@
     "token": "",
     "logChannel": "",
     "catbox_token": "",
-    "defaultLang": ""
+    "defaultLang": "zh_CN",
+    "defaultService": "Litterbox",
+    "defaultLitterBoxExpr": "24h"
 }
