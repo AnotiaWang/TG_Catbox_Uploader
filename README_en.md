@@ -8,7 +8,7 @@
 
 ## Features
 
-- [x] Upload files under [20 MB](https://core.telegram.org/bots/api#getfile) (x)
+- [x] Upload files(static stickers, photos, audios, videos) under [20 MB](https://core.telegram.org/bots/api#getfile)
 
 - [x] Support Catbox and Litterbox as storage
 
@@ -17,6 +17,8 @@
 - [x] Auto save data
 
 - [x] Customizable strings & default language & default service & default Litterbox file expiration
+
+- [x] Support groups and private chats
 
 ## Deploy
 

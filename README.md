@@ -10,7 +10,7 @@
 
 ## 特性
 
-- [x] 可上传 [20 MB](https://core.telegram.org/bots/api#getfile) 以下的文件 (x)
+- [x] 可上传 [20 MB](https://core.telegram.org/bots/api#getfile) 以下的音频、视频、文件、静态贴纸
 
 - [x] 支持 Catbox 和 Litterbox
 
@@ -19,6 +19,8 @@
 - [x] 可自定义默认语言、默认服务、Litterbox 文件过期时限和字符串
 
 - [x] 可自动 / 手动保存数据
+
+- [x] 支持私聊 / 群组中调用
 
 ## 部署
 
@@ -33,7 +35,7 @@ npm install
 node bot
 ```
 
-## 变量
+## 环境变量
 
 - `token`: 从 BotFather 获得的 Bot token。
 

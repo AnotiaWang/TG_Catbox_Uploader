@@ -1,7 +1,7 @@
 {
     "zh_CN": {
         "name": "简体中文",
-        "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 <a href=\"https://catbox.moe\">Catbox</a> 或 <a href=\"https://litterbox.catbox.moe\">Litterbox</a>，并返回文件的分享链接。\n<b>单文件限制 20 MB。</b>上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> 以及 Litterbox ToS。\n\n命令列表：\n/help - 显示帮助信息\n/settings - 设置语言、存储服务、文件有效时长\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
+        "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 <a href=\"https://catbox.moe\">Catbox</a> 或 <a href=\"https://litterbox.catbox.moe\">Litterbox</a>，并返回文件的分享链接。\n<b>单文件限制 20 MB。</b>上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> 以及 Litterbox ToS。\n\n命令列表：\n/help - 显示帮助信息\n/settings - 设置语言、存储服务、文件有效时长\n/upload -（群组中）回复一条带文件的消息以上传\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
         "downloading": "开始下载...",
         "uploading": "文件下载完成，正在上传到 {s}...",
         "uploaded": "上传完成！文件链接（有效时长 {s}）👇\n",
@@ -25,7 +25,7 @@
     },
     "en_US": {
         "name": "English",
-        "help": "🐱 <b>Welcome to Catbox Uploader!</b>\n\nThis bot can upload your files to <a href=\"https://catbox.moe\">Catbox</a> or <a href=\"https://litterbox.catbox.moe\">Litterbox</a>, and return the file's share link. \n<b>Single file limit 20 MB (Bot API).</b> The files you uploaded mustn't violate the <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> and Litterbox ToS.\n\nCommands:\n/help - Send this help info\n/settings - Choose a language, service or file expiration.\n\nTake a look at my channel @atashare and @atabots for interesting websites and update notes!\nSource Code：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
+        "help": "🐱 <b>Welcome to Catbox Uploader!</b>\n\nThis bot can upload your files to <a href=\"https://catbox.moe\">Catbox</a> or <a href=\"https://litterbox.catbox.moe\">Litterbox</a>, and return the file's share link. \n<b>Single file limit 20 MB (Bot API).</b> The files you uploaded mustn't violate the <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> and Litterbox ToS.\n\nCommands:\n/help - Send this help info\n/settings - Choose a language, service or file expiration.\n/upload - (in groups) Reply to a message with file to upload.\n\nTake a look at my channel @atashare and @atabots for interesting websites and update notes!\nSource Code：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
         "downloading": "Downloading...",
         "uploading": "File downloaded successfully. Now uploading to {s}...",
         "uploaded": "Uploaded! Link (available in {s}) 👇\n",
