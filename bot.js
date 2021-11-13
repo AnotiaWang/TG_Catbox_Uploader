@@ -120,7 +120,7 @@ bot.on('message', (msg) => {
                             catbox.upload('temp/' + user + path.extname(link)).then(function (result) {
                                 userPrefs[user].downladInProgress = false;
                                 if (result.match('https:\/\/'))
-                                    bot.sendMessage(user, strings[lang].uploaded + result);
+                                    bot.sendMessage(user, strings[lang].uploaded.replace('{s}', '∞') + result);
                                 else
                                     bot.sendMessage(user, strings[lang].serviceError.replace('{s}', result));
                                 fs.rmSync('temp/' + user + path.extname(link));
