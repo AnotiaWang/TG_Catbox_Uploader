@@ -68,7 +68,8 @@ bot.on('message', (msg) => {
                     strings = JSON.parse(fs.readFileSync('./strings.json', 'utf8'));
                     bot.sendMessage(admin_id, strings[lang].reloadStringsSuccess);
                 }
-            case '/savedata':
+                break;
+            case '/save':
                 if (msg.from.id == admin_id)
                     saveLogs();
                 bot.sendMessage(admin_id, strings[lang].saveDataSuccess);
