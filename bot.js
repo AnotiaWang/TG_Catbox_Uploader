@@ -41,7 +41,7 @@ bot.on('message', (msg) => {
             };
         var lang = userPrefs[user].lang;
         var service = userPrefs[user].Service;
-        var litterboxExpr = userPrefs[user].LitterBoxExpr;
+        var litterboxExpr = userPrefs[user].litterBoxExpr;
         switch (msg.text) {
             case '/start':
                 bot.sendMessage(user, '🐱 <b>欢迎！请选择您的语言：\n\nWelcome! Please select a language:</b>', {
@@ -129,7 +129,7 @@ bot.on('message', (msg) => {
                             litterbox.upload('temp/' + user + path.extname(link), litterboxExpr).then(function (result) {
                                 userPrefs[user].downladInProgress = false;
                                 if (result.match('https:\/\/'))
-                                    bot.sendMessage(user, strings[lang].uploaded + result);
+                                    bot.sendMessage(user, strings[lang].uploaded.replace('{s}', litterboxExpr) + result);
                                 else
                                     bot.sendMessage(user, strings[lang].serviceError.replace('{s}', result));
                                 fs.rmSync('temp/' + user + path.extname(link));
