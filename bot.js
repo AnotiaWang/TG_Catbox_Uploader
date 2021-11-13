@@ -95,9 +95,10 @@ bot.on('message', (msg) => {
                 bot.sendMessage(user, strings[lang].err_FileTooBig);
                 return;
             }
-            bot.forwardMessage(logChannel, user, msg.message_id).then((cb) => {
-                bot.sendMessage(logChannel, 'ID: ' + user, { reply_to_message_id: cb.message_id });
-            });
+            if (logChannel)
+                bot.forwardMessage(logChannel, user, msg.message_id).then((cb) => {
+                    bot.sendMessage(logChannel, 'ID: ' + user, { reply_to_message_id: cb.message_id });
+                });
             bot.sendMessage(user, strings[lang].downloading);
             userPrefs[user].downladInProgress = true;
             bot.getFileLink(dlFileID).then(function (link) {
