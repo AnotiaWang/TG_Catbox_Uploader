@@ -21,9 +21,10 @@
 ## Deploy
 
 - Give me a star 😘
+
 - Clone this repo
 
-- Run the following command:
+- Run the following command: (Node.js environment required)
 
 ```Bash
 npm install

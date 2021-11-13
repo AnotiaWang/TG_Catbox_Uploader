@@ -24,9 +24,9 @@
 
 - 点个 Star 😘
 
-- Clone 本仓库到本地
+- Clone 此仓库到本地 / 服务器
 
-- 运行以下命令：
+- 运行以下命令（需有 Node.js 环境）：
 
 ```Bash
 npm install
@@ -43,7 +43,7 @@ node bot
 
 - `defaultLang`: [ `zh_CN` / `en_US` ] 用户的默认语言。
 
-- `catbox_token`: [ Optional ] Catbox.moe 账号令牌. 如果留空，则为匿名上传文件。填写后可以在 Catbox 账号中管理文件。
+- `catbox_token`: [ Optional ] Catbox.moe 账号令牌。如果留空，则为匿名上传文件。填写后可以在 Catbox 账号中管理文件。
 
 - `defaultService`: [ `Catbox` / `Litterbox` ] 用户的默认存储服务。
 
