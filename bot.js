@@ -164,13 +164,13 @@ bot.on('message', (msg) => {
                     }
                 });
             }
-        }
-        if (msg.reply_to_message && msg.text.startsWith('/upload')) {
-            var reply = msg.reply_to_message;
-            if (reply.document || reply.sticker || reply.photo || reply.audio || reply.video)
-                upload(reply, user, 1, service, litterboxExpr, lang);
-            else
-                bot.sendMessage(user, strings[lang].fileNotDetected, { reply_to_message_id: msg.message_id });
+            if (msg.reply_to_message && msg.text.startsWith('/upload')) {
+                var reply = msg.reply_to_message;
+                if (reply.document || reply.sticker || reply.photo || reply.audio || reply.video)
+                    upload(reply, user, 1, service, litterboxExpr, lang);
+                else
+                    bot.sendMessage(user, strings[lang].fileNotDetected, { reply_to_message_id: msg.message_id });
+            }
         }
     }
 });
