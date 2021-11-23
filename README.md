@@ -16,11 +16,13 @@
 
 - [x] 多语言支持 (zh_CN / en_US)，可添加翻译文件
 
-- [x] 可自定义默认语言、默认服务、Litterbox 文件过期时限和字符串
+- [x] 可自定义默认语言、默认服务、Litterbox 文件过期时限、说明文字、同时上传文件的数量
 
 - [x] 可自动 / 手动保存数据
 
 - [x] 支持私聊 / 群组中调用
+
+- [x] 支持 Webhook
 
 ## 部署
 
@@ -41,15 +43,19 @@ node bot
 
 - `admin_id`: 机器人拥有者（你本人）的 ID。可从 [GetIDs Bot](https://t.me/getidsbot) 获取。
 
-- `logChannel`: 用于存放记录的频道 ID。*可留空，仅用于回溯确认文件是否违反 ToS*。
+- `log_channel`: 用于存放记录的频道 ID。*可留空，仅用于回溯确认文件是否违反 ToS*。
 
-- `defaultLang`: [ `zh_CN` / `en_US` ] 用户的默认语言。
+- `lang`: [ `zh_CN` / `en_US` ] 用户的默认语言。
 
 - `catbox_token`: [ Optional ] Catbox.moe 账号令牌。如果留空，则为匿名上传文件。填写后可以在 Catbox 账号中管理文件。
 
-- `defaultService`: [ `Catbox` / `Litterbox` ] 用户的默认存储服务。
+- `service`: [ `Catbox` / `Litterbox` ] 用户的默认存储服务。
 
-- `defaultLitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] 用户的默认 Litterbox 文件过期时间。
+- `LitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] 用户的默认 Litterbox 文件过期时间。
+
+- `ParallelFiles`: 允许用户同时上传文件的数量（Node.js 为单线程，此变量为防止滥用）。
+
+- `webhook_url`: [ 可选 ] Webhook 的 URL，若留空则默认使用 Polling。Express.js 监听的地址可在代码中修改，需设置为反代地址。
 
 ## Demo
 

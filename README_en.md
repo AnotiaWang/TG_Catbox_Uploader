@@ -10,15 +10,17 @@
 
 - [x] Upload files(static stickers, photos, audios, videos) under [20 MB](https://core.telegram.org/bots/api#getfile)
 
-- [x] Support Catbox and Litterbox as storage
+- [x] Supports Catbox and Litterbox as storage
 
 - [x] Multi-language support (zh_CN / en_US)
 
 - [x] Auto save data
 
-- [x] Customizable strings & default language & default service & default Litterbox file expiration
+- [x] Customizable strings & default language & default service & default Litterbox file expiration & parallel file uploads
 
-- [x] Support groups and private chats
+- [x] Supports groups and private chats
+
+- [x] Supports webhooks
 
 ## Deploy
 
@@ -39,15 +41,19 @@ node bot
 
 - `admin_id`: Admin ID (Usually yours. Get it from [GetIDs Bot](https://t.me/getidsbot)).
 
-- `logChannel`: Channel to store logs. Can be left empty. *This is only used to check if files violated the ToS*.
+- `log_channel`: Channel to store logs. Can be left empty. *This is only used to check if files violated the ToS*.
 
-- `defaultLang`: [ `zh_CN` / `en_US` ] Default language for your users.
+- `lang`: [ `zh_CN` / `en_US` ] Default language for your users.
 
 - `catbox_token`: [ Optional ] Catbox.moe token. If empty, bot will upload files anonymously. If specfied, you can manage the uploaded files in your Catbox account.
 
-- `defaultService`: [ `Catbox` / `Litterbox` ] Default service for your users.
+- `service`: [ `Catbox` / `Litterbox` ] Default service for your users.
 
-- `defaultLitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] Default expiration for your users, if they selected Litterbox as storage.
+- `LitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] Default expiration for your users, if they selected Litterbox as storage.
+
+- `ParallelFiles`: Default number of parallel file uploads. (Node.js is single-threaded, so this is only for flood control)
+
+- `webhook_url`: [ Optional ] Webhook URL. If not specified, bot will use polling as default. The port that express.js listens can be changed in the code. You may use a reverse proxy to make it work.
 
 ## Demo
 
