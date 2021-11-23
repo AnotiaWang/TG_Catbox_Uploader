@@ -1,9 +1,11 @@
 {
     "admin_id": "",
     "token": "",
-    "logChannel": "",
+    "log_channel": "",
     "catbox_token": "",
-    "defaultLang": "zh_CN",
-    "defaultService": "Litterbox",
-    "defaultLitterBoxExpr": "24h"
+    "lang": "zh_CN",
+    "service": "Litterbox",
+    "LitterBoxExpr": "24h",
+    "webhook_url": "",
+    "ParallelFiles": 3
 }

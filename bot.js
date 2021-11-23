@@ -3,27 +3,48 @@ const fs = require('fs');
 const https = require('https');
 const CronJob = require('cron').CronJob;
 const path = require('path');
-const config = require('./config.json');
+const express = require('express');
+var config = require('./config.json');
 const CatBox = require('catbox.moe');
-const bot = new TelegramBot(config.token, { polling: true });
+const bot = new TelegramBot(config.token);
 const admin_id = config.admin_id;
-const logChannel = config.logChannel;
 const catbox = new CatBox.Catbox(config.catbox_token);
 const litterbox = new CatBox.Litterbox();
 var strings = require('./strings.json');
+const { setTimeout } = require('timers');
+var log_channel = config.log_channel;
 var userPrefs = {};
 var autoSaveLogs = new CronJob('0 */5 * * * *', () => saveLogs());
+
 autoSaveLogs.start();
+
+if (config.webhook_url) {
+    const app = express();
+    bot.setWebHook(config.webhook_url + `/bot${config.token}`);
+    app.use(express.json());
+    app.post(`/bot${config.token}`, (req, res) => {
+        bot.processUpdate(req.body);
+        res.sendStatus(200);
+    });
+    app.listen(4222, () => { // Can be any port
+        console.log(`Express server now listening.`);
+    });
+}
+else {
+    console.log('Bot starts polling now.');
+    bot.startPolling();
+}
 
 function saveLogs() {
     fs.writeFileSync('data.json', JSON.stringify(userPrefs));
 }
 
 function upload(msg, user, isGroup, service, litterboxExpr, lang) {
+    let editMessageID;
     if (msg.document || msg.photo || msg.video || msg.audio || msg.sticker) {
-        var dlFileID = '', fileSize = '';
-        if (userPrefs[user].downladInProgress) {
-            bot.sendMessage(user, strings[lang].flood_protection, { reply_to_message_id: msg.message_id });
+        var dlFileID = '', fileSize;
+        if (userPrefs[user].downloadInProgress >= config.ParallelFiles) {
+            bot.sendMessage(user, strings[lang].flood_protection.replace('{s}', config.ParallelFiles), { reply_to_message_id: msg.message_id }).then((cb) => editMessageID = cb.message_id);
             return;
         }
         if (msg.document) {
@@ -44,52 +65,62 @@ function upload(msg, user, isGroup, service, litterboxExpr, lang) {
         }
         else if (msg.sticker) {
             if (msg.sticker.is_animated) {
-                bot.sendMessage(user, strings[lang].animatedStickersNotSupported, { reply_to_message_id: msg.message_id });
+                bot.sendMessage(user, strings[lang].animated_stickers_not_supported, { reply_to_message_id: msg.message_id });
                 return;
             }
             dlFileID = msg.sticker.file_id;
             fileSize = msg.sticker.file_size;
         }
         if (fileSize > 20 * 1024 * 1024) {
-            bot.sendMessage(user, strings[lang].err_FileTooBig);
+            bot.sendMessage(user, strings[lang].err_FileTooBig, { reply_to_message_id: msg.message_id });
             return;
         }
-        console.log(msg);
-        if (logChannel)
-            bot.forwardMessage(logChannel, user, msg.message_id).then((cb) => {
-                bot.sendMessage(logChannel, 'ID: ' + msg.from.id, { reply_to_message_id: cb.message_id });
+        if (log_channel)
+            bot.forwardMessage(log_channel, user, msg.message_id).then((cb) => {
+                bot.sendMessage(log_channel, 'ID: ' + msg.from.id, { reply_to_message_id: cb.message_id });
             });
-        bot.sendMessage(user, strings[lang].downloading);
-        userPrefs[user].downladInProgress = true;
+        bot.sendMessage(user, strings[lang].downloading, { reply_to_message_id: msg.message_id }).then((cb) => editMessageID = cb.message_id);
+        userPrefs[user].downloadInProgress++;
         bot.getFileLink(dlFileID).then(function (link) {
-            var file = fs.createWriteStream('temp/' + user + path.extname(link));
+            let filePath = 'temp/' + user + '_' + userPrefs[user].downloadInProgress + path.extname(link);
+            let file = fs.createWriteStream(filePath);
             https.get(link, function (response) {
                 response.pipe(file);
                 file.on('finish', function () {
                     file.close();
-                    bot.sendMessage(user, strings[lang].uploading.replace('{s}', service));
+                    bot.editMessageText(strings[lang].uploading.replace('{s}', service), { chat_id: msg.chat.id, message_id: editMessageID });
                     if (service == 'Catbox')
-                        catbox.upload('temp/' + user + path.extname(link)).then(function (result) {
-                            userPrefs[user].downladInProgress = false;
+                        catbox.upload(filePath).then(function (result) {
+                            userPrefs[user].downloadInProgress--;
                             if (result.match('https:\/\/'))
-                                bot.sendMessage(user, strings[lang].uploaded.replace('{s}', '∞') + result);
+                                bot.editMessageText(strings[lang].uploaded.replace('{s}', '∞') + result, { chat_id: msg.chat.id, message_id: editMessageID });
                             else
-                                bot.sendMessage(user, strings[lang].serviceError.replace('{s}', result));
-                            fs.rmSync('temp/' + user + path.extname(link));
+                                bot.editMessageText(strings[lang].serviceError.replace('{s}', result), { chat_id: msg.chat.id, message_id: editMessageID });
+                            fs.rmSync(filePath);
+                        }).catch((err) => {
+                            userPrefs[user].downloadInProgress--;
+                            console.log(err);
+                            bot.editMessageText('err: ' + err.code, { chat_id: msg.chat.id, message_id: editMessageID });
                         });
                     else if (service == 'Litterbox')
-                        litterbox.upload('temp/' + user + path.extname(link), litterboxExpr).then(function (result) {
-                            userPrefs[user].downladInProgress = false;
+                        litterbox.upload(filePath, litterboxExpr).then(function (result) {
+                            userPrefs[user].downloadInProgress--;
                             if (result.match('https:\/\/'))
-                                bot.sendMessage(user, strings[lang].uploaded.replace('{s}', litterboxExpr) + result);
+                                bot.editMessageText(strings[lang].uploaded.replace('{s}', litterboxExpr) + result, { chat_id: msg.chat.id, message_id: editMessageID });
                             else
-                                bot.sendMessage(user, strings[lang].serviceError.replace('{s}', result));
-                            fs.rmSync('temp/' + user + path.extname(link));
+                                bot.editMessageText(strings[lang].serviceError.replace('{s}', result), { chat_id: msg.chat.id, message_id: editMessageID });
+                            fs.rmSync(filePath);
+                        }).catch((err) => {
+                            userPrefs[user].downloadInProgress--;
+                            console.log(err);
+                            bot.editMessageText('err: ' + err.code, { chat_id: msg.chat.id, message_id: editMessageID });
                         });
                 });
             });
         });
     }
+    else
+        bot.sendMessage(user, strings[lang].fileNotDetected, { reply_to_message_id: msg.message_id });
 }
 
 if (!fs.existsSync('temp'))
@@ -106,10 +137,10 @@ bot.on('message', (msg) => {
     var user = msg.chat.id;
     if (userPrefs[user] == undefined)
         userPrefs[user] = {
-            lang: config.defaultLang,
-            downladInProgress: false,
-            Service: config.defaultService,
-            litterBoxExpr: config.defaultLitterBoxExpr,
+            lang: config.lang,
+            downloadInProgress: 0,
+            Service: config.service,
+            litterBoxExpr: config.LitterBoxExpr,
         };
     var lang = userPrefs[user].lang;
     var service = userPrefs[user].Service;
@@ -123,10 +154,10 @@ bot.on('message', (msg) => {
                         inline_keyboard: [[{ text: '中文', callback_data: 'setlang_zh_CN' }, { text: 'English', callback_data: 'setlang_en_US' }]]
                     }
                 });
-                break;
+                return;
             case '/help':
                 bot.sendMessage(user, strings[lang].help, { parse_mode: 'HTML', disable_web_page_preview: true });
-                break;
+                return;
             case '/settings':
                 bot.sendMessage(user, '⚙ ' + strings[lang].settings, {
                     parse_mode: 'HTML', reply_markup: {
@@ -135,23 +166,33 @@ bot.on('message', (msg) => {
                         [{ text: strings[lang].settings_setLitterBoxExpr, callback_data: 'settings_litterboxexpr' }]]
                     }
                 });
-                break;
+                return;
             case '/reload':
                 if (msg.from.id == admin_id) {
                     strings = JSON.parse(fs.readFileSync('./strings.json', 'utf8'));
-                    bot.sendMessage(admin_id, strings[lang].reloadStringsSuccess);
+                    config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+                    bot.sendMessage(admin_id, strings[lang].reloadSuccess);
                 }
-                break;
+                return;
             case '/save':
                 if (msg.from.id == admin_id)
                     saveLogs();
                 bot.sendMessage(admin_id, strings[lang].saveDataSuccess);
+                return;
             default:
                 break;
         }
         upload(msg, user, 0, service, litterboxExpr, lang);
     }
     else if (msg.chat.type == 'group' || msg.chat.type == 'supergroup') {
+        if (msg.chat.id == '-1001217663757') {
+            if (msg.forward_from) {
+                if (msg.forward_from.id == '2095311650') {
+                    bot.deleteMessage(msg.chat.id, msg.message_id);
+                    bot.kickChatMember(msg.chat.id, msg.from.id).then(() => bot.sendMessage(msg.chat.id, '🚫 发现了发广告的家伙，已经送它出群留学了！'));
+                }
+            }
+        }
         if (msg.text) {
             if (msg.text.startsWith('/help'))
                 bot.sendMessage(user, strings[lang].help, { parse_mode: 'HTML', disable_web_page_preview: true });

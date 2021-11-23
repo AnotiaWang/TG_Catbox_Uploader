@@ -16,6 +16,7 @@
   "dependencies": {
     "catbox.moe": "^1.0.2",
     "cron": "^1.8.2",
+    "express": "^4.17.1",
     "node-telegram-bot-api": "^0.54.0"
   }
 }
