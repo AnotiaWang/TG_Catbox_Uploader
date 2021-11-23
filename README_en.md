@@ -12,11 +12,11 @@
 
 - [x] Supports Catbox and Litterbox as storage
 
-- [x] Multi-language support (zh_CN / en_US)
+- [x] Multi-language support (zh_CN / en_US), can be customized
 
-- [x] Auto save data
+- [x] Auto save data; Auto/Manual save/reload data.
 
-- [x] Customizable strings & default language & default service & default Litterbox file expiration & parallel file uploads
+- [x] Customizable strings & language & service & Litterbox file expiration & parallel file uploads
 
 - [x] Supports groups and private chats
 
