@@ -20,7 +20,7 @@
         "saveDataSuccess": "成功保存数据。",
         "hour": " 小时",
         "serviceError": "服务出现错误：{s}",
-        "animatedStickersNotSupported": "动态贴纸暂不支持。",
+        "animatedStickers": "Telegram 动态贴纸以 .tgs 格式储存，您可以使用<a href=\"https://www.emojibest.com/tgs-to-gif\">在线转换器</a>或机器人（如 @tgstogifbot ）等工具将 tgs 文件转换为 GIF 格式。",
         "fileNotDetected": "回复的消息中未发现可上传的文件。\n\n支持的文件类型：文档、视频、音频、静态贴纸、GIF。\nTelegram 服务器会将动图转为 mp4，因此我上传的也为视频。"
     },
     "en_US": {
@@ -44,7 +44,7 @@
         "saveDataSuccess": "Data saved.",
         "hour": " hour",
         "serviceError": "Service error: {s}",
-        "animatedStickersNotSupported": "Animated stickers are not supported.",
-        "fileNotDetected": "No uploadable file detected in the message.\n\nSupported file types: documents, videos, audio, static stickers, GIF. \nTelegram server will convert animated stickers to mp4, so I upload them as videos."
+        "animatedStickers": "Animated stickers are stored in .tgs format, you can use <a href=\"https://www.emojibest.com/tgs-to-gif\">online converter</a> or bots (like @tgstogifbot) to convert tgs to gif. ",
+        "fileNotDetected": "No uploadable file detected in the message.\n\nSupported file types: documents, videos, audio, static stickers, GIF. \nTelegram server converts GIFs to mp4, so I upload them as videos."
     }
 }

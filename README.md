@@ -10,7 +10,7 @@
 
 ## 特性
 
-- [x] 可上传 [20 MB](https://core.telegram.org/bots/api#getfile) 以下的音频、视频、文件、静态贴纸
+- [x] 可上传 [20 MB](https://core.telegram.org/bots/api#getfile) 以下的音频、视频、文件、贴纸
 
 - [x] 支持 Catbox 和 Litterbox
 
@@ -53,9 +53,9 @@ node bot
 
 - `LitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] 用户的默认 Litterbox 文件过期时间。
 
-- `ParallelFiles`: 允许用户同时上传文件的数量（Node.js 为单线程，此变量为防止滥用）。
+- `ParallelFiles`: 允许用户同时上传文件的数量（建议 `1`）。
 
-- `webhook_url`: [ 可选 ] Webhook 的 URL，若留空则默认使用 Polling。Express.js 监听的地址可在代码中修改，需设置为反代地址。
+- `webhook_url`: [ 可选 ] Webhook 的 URL，若留空则默认使用 Polling。Express.js 监听端口可在代码中修改，需设置反代。
 
 ## Demo
 

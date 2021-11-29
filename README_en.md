@@ -8,7 +8,7 @@
 
 ## Features
 
-- [x] Upload files(static stickers, photos, audios, videos) under [20 MB](https://core.telegram.org/bots/api#getfile)
+- [x] Upload files(stickers, photos, audios, videos) under [20 MB](https://core.telegram.org/bots/api#getfile)
 
 - [x] Supports Catbox and Litterbox as storage
 
@@ -51,7 +51,7 @@ node bot
 
 - `LitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] Default expiration for your users, if they selected Litterbox as storage.
 
-- `ParallelFiles`: Default number of parallel file uploads. (Node.js is single-threaded, so this is only for flood control)
+- `ParallelFiles`: Default number of parallel file uploads. (Recommended `1`)
 
 - `webhook_url`: [ Optional ] Webhook URL. If not specified, bot will use polling as default. The port that express.js listens can be changed in the code. You may use a reverse proxy to make it work.
 

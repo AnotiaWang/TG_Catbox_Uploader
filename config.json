@@ -7,5 +7,5 @@
     "service": "Litterbox",
     "LitterBoxExpr": "24h",
     "webhook_url": "",
-    "ParallelFiles": 3
+    "ParallelFiles": 1
 }
