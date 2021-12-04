@@ -66,10 +66,10 @@ bot.on('message', (msg) => {
                             inline_keyboard: [[{ text: '中文', callback_data: 'setlang_zh_CN' }, { text: 'English', callback_data: 'setlang_en_US' }]]
                         }
                     });
-                    return;
+                    break;
                 case '/help':
                     bot.sendMessage(user, strings[lang].help, { parse_mode: 'HTML', disable_web_page_preview: true });
-                    return;
+                    break;
                 case '/settings':
                     bot.sendMessage(user, '⚙ ' + strings[lang].settings, {
                         parse_mode: 'HTML', reply_markup: {
@@ -78,19 +78,32 @@ bot.on('message', (msg) => {
                             [{ text: strings[lang].settings_setLitterBoxExpr, callback_data: 'settings_litterboxexpr' }]]
                         }
                     });
-                    return;
+                    break;
                 case '/reload':
-                    if (user == admin_id) {
-                        strings = JSON.parse(fs.readFileSync('./strings.json', 'utf8'));
-                        config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-                        bot.sendMessage(admin_id, strings[lang].reloadSuccess);
-                    }
-                    return;
+                    if (user != admin_id)
+                        break;
+                    strings = JSON.parse(fs.readFileSync('./strings.json', 'utf8'));
+                    config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
+                    bot.sendMessage(admin_id, strings[lang].reloadSuccess);
+                    break;
                 case '/save':
-                    if (user == admin_id)
-                        saveLogs();
+                    if (user != admin_id)
+                        break;
+                    saveLogs();
                     bot.sendMessage(admin_id, strings[lang].saveDataSuccess);
-                    return;
+                    break;
+                case '/stats':
+                    if (user != admin_id)
+                        break;
+                    let stats = { t: 0, c: 0, e: 0 }; // t: total, c: Chinese, e: English
+                    for (let user in userPrefs) {
+                        if (userPrefs[user].lang == 'zh_CN')
+                            stats.c++;
+                        else
+                            stats.e++;
+                        stats.t++;
+                    }
+                    bot.sendMessage(admin_id, strings[lang].stats.replace('{t}', stats.t).replace('{c}', stats.c).replace('{e}', stats.e));
                 default:
                     break;
             }
@@ -111,7 +124,8 @@ bot.on('message', (msg) => {
                 }
             }
         }
-        upload(msg, user, 0, service, litterboxExpr, lang);
+        else
+            upload(msg, user, 0, service, litterboxExpr, lang);
     }
     else if (msg.chat.type == 'group' || msg.chat.type == 'supergroup') {
         if (msg.text) {
