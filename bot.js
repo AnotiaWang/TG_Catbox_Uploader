@@ -52,11 +52,60 @@ bot.on('message', (msg) => {
             downloadInProgress: 0,
             Service: config.service,
             litterBoxExpr: config.LitterBoxExpr,
+            banned: false
         };
     var lang = userPrefs[user].lang;
     var service = userPrefs[user].Service;
     var litterboxExpr = userPrefs[user].litterBoxExpr;
     if (msg.chat.type == 'private') {
+        if (user == admin_id && msg.text) {
+            //Usage: /notify [zh_CN]通知内容[/zh_CN] [en_US]Content[/en_US]
+            if (msg.text.startsWith('/notify')) {
+                let text = msg.text;
+                let zh_CN = text.slice(text.indexOf('[zh_CN]') + 7, text.indexOf('[/zh_CN]'));
+                let en_US = text.slice(text.indexOf('[en_US]') + 7, text.indexOf('[/en_US]'));
+                Object.keys(userPrefs).forEach(function (key) {
+                    if (userPrefs[key].lang == 'zh_CN')
+                        bot.sendMessage(key, zh_CN);
+                    else if (userPrefs[key].lang == 'en_US')
+                        bot.sendMessage(key, en_US);
+                    bot.sendMessage(admin_id, 'Notified ' + key).catch((err) => bot.sendMessage(admin_id, 'Fail notifying' + key + '\n\nInfo: \n' + err.message));
+                });
+            }
+            // Usage: /warn_12345678 [Content]
+            else if (msg.text.startsWith('/warn_')) {
+                let User = msg.text.split(' ')[0].slice(6);
+                console.log(User)
+                let content = msg.text.slice(msg.text.indexOf(' ') + 1);
+                bot.sendMessage(User, content)
+                    .catch((err) => bot.sendMessage(admin_id, err.message))
+                    .then((cb) => bot.sendMessage(admin_id, 'Warned ' + User));
+            }
+            // Usage: /ban 123456789
+            else if (msg.text.startsWith('/ban')) {
+                let User = msg.text.split(' ')[1];
+                if (!User) {
+                    bot.sendMessage(admin_id, 'Lack parameter.');
+                    return;
+                }
+                userPrefs[User] ? userPrefs[User].banned = true : userPrefs[User] = { banned: true };
+                bot.sendMessage(admin_id, 'Banned ' + User);
+            }
+            // Usage: /unban 123456789
+            else if (msg.text.startsWith('/unban')) {
+                let User = msg.text.split(' ')[1];
+                if (!User) {
+                    bot.sendMessage(admin_id, 'Lack parameter.');
+                    return;
+                }
+                userPrefs[User] ? userPrefs[User].banned = false : userPrefs[User] = { banned: false };
+                bot.sendMessage(admin_id, 'Unbanned ' + User);
+            }
+        }
+        if (userPrefs[user].banned) {
+            bot.sendMessage(user, strings[lang].banned);
+            return;
+        }
         if (msg.text) {
             switch (msg.text) {
                 case '/start':
@@ -106,22 +155,6 @@ bot.on('message', (msg) => {
                     bot.sendMessage(admin_id, strings[lang].stats.replace('{t}', stats.t).replace('{c}', stats.c).replace('{e}', stats.e));
                 default:
                     break;
-            }
-            if (msg.text.startsWith('/notify') && user == admin_id) {
-                let text = msg.text;
-                let zh_CN = text.slice(text.indexOf('[zh_CN]') + 7, text.indexOf('[/zh_CN]'));
-                let en_US = text.slice(text.indexOf('[en_US]') + 7, text.indexOf('[/en_US]'));
-                if (text == undefined)
-                    bot.sendMessage(admin_id, 'Lack of parameters');
-                else {
-                    Object.keys(userPrefs).forEach(function (key) {
-                        if (userPrefs[key].lang == 'zh_CN')
-                            bot.sendMessage(key, zh_CN);
-                        else if (userPrefs[key].lang == 'en_US')
-                            bot.sendMessage(key, en_US);
-                        bot.sendMessage(admin_id, 'Notified ' + key).catch((err) => bot.sendMessage(admin_id, 'Fail notifying' + key + '\n\nInfo: \n' + err));
-                    });
-                }
             }
         }
         else
