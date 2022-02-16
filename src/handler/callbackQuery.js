@@ -1,10 +1,9 @@
 import strings from "../strings.js";
 import { chatData, initChatData, buttons, saveBotData } from "./index.js";
 import { bot } from "../../index.js";
-import { CallbackQueryEvent } from "telegram/events/CallbackQuery.js";
 
 export async function handleCallbackQuery(update) {
-    // console.log(update);
+    console.log(update)
     let chat = parseInt(update.userId.value);
     let data = update.data.toString();
     let arg = data.includes('_') ? data.slice(data.indexOf("_") + 1) : null;
@@ -44,5 +43,4 @@ export async function handleCallbackQuery(update) {
         parseMode: 'html',
         buttons: bt
     }).catch();
-    // new CallbackQueryEvent(update, update.peer, update.msgId).answer({ message: '', alert: false });
 }

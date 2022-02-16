@@ -1,5 +1,5 @@
 import CatBoxMoe from "catbox.moe";
-import { MAX_DOWNLOADING, chatData } from "./index.js";
+import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID } from "./index.js";
 import strings from "../strings.js";
 import * as fs from "fs";
 import { bot } from "../../index.js";
@@ -25,9 +25,16 @@ export async function transfer(msg) {
         fileSize = sizes[sizes.length - 1];
         fileExt = 'png';
     }
-    chatData[chat].downloading++;
+
+    if ((service === 'Catbox' &&  fileSize > 200000000) || (service === 'Litterbox' && fileSize > 1000000000))
+        return bot.sendMessage(chat, { message: strings[lang].err_FileTooBig.replace('{s}', service) });
 
     editMsg = await bot.sendMessage(chat, { message: strings[lang].downloading, replyTo: msg.id });
+    chatData[chat].downloading++;
+    if (LOG_CHANNEL_ID) {
+        let log = await bot.forwardMessages(LOG_CHANNEL_ID, {messages: msg.id, fromPeer: chat}).catch(console.error);
+        await bot.sendMessage(LOG_CHANNEL_ID, { message: `From: \`${chat}\`\nService: ${service}`, replyTo: log[0].id });
+    }
 
     if (!fs.existsSync('./cache'))
         fs.mkdirSync('./cache');
@@ -45,10 +52,14 @@ export async function transfer(msg) {
     try {
         let result;
         if (service.toLowerCase() === 'catbox') {
-            result = await CatBox.upload(filePath);
+            result = await CatBox.upload(filePath).catch((e) => {
+                throw new Error(e);
+            });
         }
         else
-            result = await LitterBox.upload(filePath, chatData[chat].litterBoxExpr);
+            result = await LitterBox.upload(filePath, chatData[chat].litterBoxExpr).catch((e) => {
+                throw new Error(e);
+            });
         bot.editMessage(chat, {
             message: editMsg.id, text: strings[lang].uploaded
                 .replace('{s}', service.toLowerCase() === 'catbox' ? '∞' : chatData[chat].litterBoxExpr) + result
@@ -56,7 +67,7 @@ export async function transfer(msg) {
     }
     catch (e) {
         console.error(`Error when uploading file from ${chat}:`, e);
-        bot.sendMessage(chat, { message: strings[lang].error + `\n${e.message}` });
+        await bot.sendMessage(chat, { message: strings[lang].error + `\n${e.message}` });
     }
     finally {
         fs.rmSync(filePath);

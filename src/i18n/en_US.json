@@ -8,7 +8,7 @@
     "flood_protection": "Please wait for the current files to finish uploading. Max files allowed at one time {s}.",
     "setSuccess": "√ Set!",
     "langSetText": "√ Language set to English. Send /help to see what I can do! ",
-    "err_FileTooBig": "File too big (> 20 MB)，exceeds Bot API limit!",
+    "err_FileTooBig": "File too big，exceeds {s} limit!\n\nCatbox limit: Max 200 MB per file\nLitterbox limit: Max 1 GB per file",
     "reloadSuccess": "✅ Reloaded strings.json & config.json",
     "settings": "<b>⚙ Settings</b>",
     "settings_setLang": "🌏 Language",
