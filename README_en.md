@@ -1,8 +1,8 @@
 # <p align="center">🐱 TG_Catbox_Uploader</p>
 
-<div style="text-align: center;"><a href="https://github.com/AnotiaWang/TG_Catbox_Uploader#readme">简体中文</a> English</div>
+<p align="center"><a href="https://github.com/AnotiaWang/TG_Catbox_Uploader#readme">简体中文</a> English</p>
 
-<div style="text-align: center;">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox.moe</a> or <a href="https://litterbox.catbox.moe">Litterbox</a>.</div>
+<p align="center">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox.moe</a> or <a href="https://litterbox.catbox.moe">Litterbox</a>.</p>
 
 ------------ 
 

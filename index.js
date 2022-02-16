@@ -13,6 +13,7 @@ await bot.start({
     botAuthToken: BOT_TOKEN
 });
 await bot.connect();
+export const BOT_NAME = (await bot.getMe()).username;
 writeFileSync('./data/.session', bot.session.save());
 console.log('[Bot] Launched successfully.');
 

@@ -1,12 +1,12 @@
 import strings  from "../strings.js";
 import { chatData, ADMIN_ID, buttons } from "./index.js";
-import { bot } from "../../index.js";
+import { bot, BOT_NAME } from "../../index.js";
 
 export async function handleCommand(msg) {
-    let text = msg.message, chat = parseInt(msg.peerId.userId.value);;
+    let text = msg.message, chat = parseInt(msg.peerId.userId.value);
     let command = text.split(" ")[0].substring(1);
     let mention = command.split("@")[1];
-    if (mention && mention !== msg.me)
+    if (mention && mention !== BOT_NAME)
         return;
     command = command.split('@')[0];
     if (GeneralCommands.prototype.hasOwnProperty(command))
@@ -29,7 +29,7 @@ class GeneralCommands {
     }
     start() {
         bot.sendMessage(this.chat, {
-            message: '🐱 <b>欢迎！请选择您的语言：\n\nWelcome! Please select a language:</b>',
+            message: '🐱 <b>欢迎！请在下方选择您的语言。发送 /help 命令查看帮助。\n\nWelcome! Please select a language below. Send /help to see what I can do.</b>',
             parseMode: 'html',
             buttons: buttons.getLanguagesButtons(this.lang)
         }).catch(console.error);

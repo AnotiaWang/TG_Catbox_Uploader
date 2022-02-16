@@ -1,10 +1,10 @@
 # <p align="center">🐱 TG_Catbox_Uploader</p>
 
-<div style="text-align: center;"> 简体中文 <a href="https://github.com/AnotiaWang/TG_Catbox_Uploader/blob/main/README_en.md">English</a></div>
+<p align="center"> 简体中文 <a href="https://github.com/AnotiaWang/TG_Catbox_Uploader/blob/main/README_en.md">English</a></p>
 
-<div style="text-align: center;">简单的 Node.js bot，可将 Telegram 的文件上传到 <a href="https://catbox.moe">Catbox.moe</a> 或 <a href="https://litterbox.catbox.moe">Litterbox</a></div>
+<p align="center">简单的 Node.js bot，可将 Telegram 的文件上传到 <a href="https://catbox.moe">Catbox.moe</a> 或 <a href="https://litterbox.catbox.moe">Litterbox</a></p>
 
-<div style="text-align: center;">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox</a> or <a href="https://litterbox.catbox.moe">Litterbox</a>.</div>
+<p align="center">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox</a> or <a href="https://litterbox.catbox.moe">Litterbox</a>.</p>
 
 -------
 
