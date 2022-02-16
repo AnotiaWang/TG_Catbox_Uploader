@@ -1,11 +1,11 @@
 import CatBoxMoe from "catbox.moe";
-import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID } from "./index.js";
+import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID, CATBOX_TOKEN } from "./index.js";
 import strings from "../strings.js";
 import * as fs from "fs";
 import { bot } from "../../index.js";
 import mime from 'mime-types';
 
-const CatBox = new CatBoxMoe.Catbox();
+const CatBox = new CatBoxMoe.Catbox(CATBOX_TOKEN);
 const LitterBox = new CatBoxMoe.Litterbox();
 
 export async function transfer(msg) {
@@ -18,7 +18,12 @@ export async function transfer(msg) {
 
     if (file.document) {
         fileSize = file.document.size;
-        fileExt = mime.extension(file.document.mimeType);
+        if (file.document.mimeType === 'application/x-tgsticker') {
+            fileExt = 'tgs';
+            await bot.sendMessage(chat, {message: strings[lang].animatedStickers, parseMode: 'html', linkPreview: false});
+        }
+        else
+            fileExt = mime.extension(file.document.mimeType);
     }
     else if (file.photo) {
         let sizes = file.photo.sizes[file.photo.sizes.length - 1].sizes;
@@ -31,10 +36,6 @@ export async function transfer(msg) {
 
     editMsg = await bot.sendMessage(chat, { message: strings[lang].downloading, replyTo: msg.id });
     chatData[chat].downloading++;
-    if (LOG_CHANNEL_ID) {
-        let log = await bot.forwardMessages(LOG_CHANNEL_ID, {messages: msg.id, fromPeer: chat}).catch(console.error);
-        await bot.sendMessage(LOG_CHANNEL_ID, { message: `From: \`${chat}\`\nService: ${service}`, replyTo: log[0].id });
-    }
 
     if (!fs.existsSync('./cache'))
         fs.mkdirSync('./cache');
@@ -42,15 +43,13 @@ export async function transfer(msg) {
     while (fs.existsSync(`./cache/${chat}_${fileName}.${fileExt}`))
         fileName = randomString();
     filePath = `./cache/${chat}_${fileName}.${fileExt}`;
-
-    console.log(`${chat} 开始下载文件`);
+    console.log(`Downloading: ${filePath}`);
     let buffer = await bot.downloadMedia(file, {});
     fs.writeFileSync(filePath, buffer);
-    console.log(`${chat} 文件下载完成`);
+    console.log(`File ${filePath} downloaded`);
     await bot.editMessage(chat, { message: editMsg.id, text: strings[lang].uploading.replace('{s}', service) });
-
+    let result = 'None';
     try {
-        let result;
         if (service.toLowerCase() === 'catbox') {
             result = await CatBox.upload(filePath).catch((e) => {
                 throw new Error(e);
@@ -72,6 +71,10 @@ export async function transfer(msg) {
     finally {
         fs.rmSync(filePath);
         chatData[chat].downloading--;
+        if (LOG_CHANNEL_ID) {
+            let log = await bot.forwardMessages(LOG_CHANNEL_ID, {messages: msg.id, fromPeer: chat}).catch(console.error);
+            await bot.sendMessage(LOG_CHANNEL_ID, { message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``, replyTo: log[0].id });
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'fs';
 
-export const { DEFAULT_LANG, DEFAULT_SERVICE, DEFAULT_EXPR, ADMIN_ID, MAX_DOWNLOADING, BOT_TOKEN, API_ID, API_HASH, LOG_CHANNEL_ID } = process.env;
+export const { DEFAULT_LANG, DEFAULT_SERVICE, DEFAULT_EXPR, ADMIN_ID, MAX_DOWNLOADING, BOT_TOKEN, API_ID, API_HASH, LOG_CHANNEL_ID, CATBOX_TOKEN } = process.env;
 
 export var chatData = {};
 export const template = {

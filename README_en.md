@@ -64,6 +64,13 @@ npm install && npm start
 
 👉👉 [Catbox Uploader Bot](https://t.me/CatboxUploaderBot) 👈👈
 
+## Translations
+
+1. Fork this repo
+2. Create a new file in the `src/i18n` folder, named `[language_code].json`, replace `-` (if exist) to `_`(e.g. `en_US.json`). For list of language codes, see [here](http://www.lingoes.net/zh/translator/langcode.htm)
+3. Edit the file, and add your translation, according to `zh_CN.json` (Chinese is my mother tongue, so the expressions may be more accurate. You can also choose other files as the source). All properties in `zh_CN.json` are required.
+4. Commit and push your changes. Create a Pull Request. 
+
 ## License
 
 MIT License
