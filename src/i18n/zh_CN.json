@@ -25,6 +25,9 @@
     "serviceError": "服务出现错误：{s}",
     "animatedStickers": "Telegram 动态贴纸以 .tgs 格式储存，目前不支持转换。如果文件后缀名异常，请自行修改。您可以使用<a href=\"https://www.emojibest.com/tgs-to-gif\">在线转换器</a>或机器人（如 @tgstogifbot ）等工具将 .tgs 文件转换为 GIF 格式。",
     "fileNotDetected": "消息中未发现可上传的文件。\n\n支持的文件类型：文档、视频、音频、静态贴纸、GIF。\nTelegram 服务器会将动图转为 mp4，因此我上传的也为视频。",
-    "stats": "📊 统计\n\n总用户数：{t}\n中文用户：{c}\n英文用户: {e}",
-    "banned": "您已经被禁止使用此机器人。"
+    "stats": "📊 统计\n\n总用户数：{1}\n传输中：{2}\n总传输数：{3}\n您的传输数：{4}",
+    "error_banned": "您已经被禁止使用此机器人。",
+    "banned": "已封禁此用户。",
+    "unbanned": "已解封此用户。",
+    "userNotFound": "未找到此用户。"
 }

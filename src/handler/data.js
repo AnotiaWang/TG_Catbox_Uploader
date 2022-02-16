@@ -7,6 +7,7 @@ export var chatData = {};
 export const template = {
     lang: DEFAULT_LANG,
     downloading: 0,
+    total: 0,
     service: DEFAULT_SERVICE,
     lbe: DEFAULT_EXPR,
     banned: false
@@ -16,6 +17,12 @@ export function initChatData(user) {
     if (!chatData[user]) {
         chatData[user] = Object.assign({}, template);
         console.log(`User ${user} data initialized`);
+    }
+    else
+        for (let key in template) {
+            if (!chatData[user][key]) {
+                chatData[user][key] = template[key];
+            }
     }
     saveBotData();
 }

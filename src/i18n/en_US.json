@@ -24,7 +24,10 @@
     "hour": " hour(s)",
     "serviceError": "Service error: {s}",
     "animatedStickers": "Animated stickers are stored in .tgs format, and I currently can't convert them. Please edit the extension yourself if the file appears abnormal. You can use <a href=\"https://www.emojibest.com/tgs-to-gif\">online converter</a> or bots (like @tgstogifbot) to convert tgs to gif. ",
-    "fileNotDetected": "No uploadable file detected in the message.\n\nSupported file types: documents, videos, audio, static stickers, GIF. \nTelegram server converts GIFs to mp4, so I upload them as videos.",
-    "stats": "📊 Stats\n\nTotal users: {t}\nChinese users: {c}\nEnglish users: {e}",
-    "banned": "You are banned from using this bot."
+    "fileNotDetected": "No available files detected in the message.\n\nSupported file types: documents, videos, audio, static stickers, GIF. \nTelegram server converts GIFs to mp4, so I upload them as videos.",
+    "stats": "<b>📊 Stats</b>\n\nTotal users: {1}\nTransfers in progress: {2}\nTotal transfers: {3}\nYour transfers: {4}",
+    "error_banned": "You are banned from using this bot.",
+    "banned": "User is now banned from using this bot.",
+    "unbanned": "User is now unbanned.",
+    "userNotFound": "User not found."
 }

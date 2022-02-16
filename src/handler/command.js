@@ -1,5 +1,5 @@
 import strings  from "../strings.js";
-import { chatData, ADMIN_ID, buttons } from "./index.js";
+import {chatData, ADMIN_ID, buttons, initChatData, saveBotData} from "./index.js";
 import { bot, BOT_NAME } from "../../index.js";
 
 export async function handleCommand(msg) {
@@ -9,16 +9,53 @@ export async function handleCommand(msg) {
     if (mention && mention !== BOT_NAME)
         return;
     command = command.split('@')[0];
+    let arg = text.split(" ").slice(1).join(" ");
     if (GeneralCommands.prototype.hasOwnProperty(command))
         new GeneralCommands(msg)[command]();
     else if (OwnerCommands.prototype.hasOwnProperty(command) && chat.toString() === ADMIN_ID)
-        new OwnerCommands(msg)[command]();
+        new OwnerCommands(msg)[command](arg);
 }
 
 class OwnerCommands {
     constructor(msg) {
         this.chat = parseInt(msg.peerId.userId.value);
         this.lang = chatData[this.chat].lang;
+    }
+
+    ban (arg) {
+        if (arg) {
+            let user = parseInt(arg);
+            if (chatData[user]) {
+                chatData[user].banned = true;
+                saveBotData();
+                bot.sendMessage(this.chat, { message: strings[this.lang].banned })
+                    .catch(console.error);
+            }
+            else
+                bot.sendMessage(this.chat, { message: strings[this.lang].userNotFound })
+                    .catch(console.error);
+        }
+        else
+            bot.sendMessage(this.chat, { message: 'Usage: /ban UID' })
+                .catch(console.error);
+    }
+
+    unban (arg) {
+        if (arg) {
+            let user = parseInt(arg);
+            if (chatData[user]) {
+                chatData[user].banned = false;
+                saveBotData();
+                bot.sendMessage(this.chat, { message: strings[this.lang].unbanned })
+                    .catch(console.error);
+            }
+            else
+                bot.sendMessage(this.chat, { message: strings[this.lang].userNotFound })
+                    .catch(console.error);
+        }
+        else
+            bot.sendMessage(this.chat, { message: 'Usage: /unban UID' })
+                .catch(console.error);
     }
 }
 
@@ -45,6 +82,24 @@ class GeneralCommands {
             parseMode: 'html',
             buttons: buttons.mainSettings(this.lang)
         }).catch(console.error);
+    }
+
+    async stats() {
+        let total = 0, downloading = 0;
+        for (let chat in chatData) {
+            initChatData(chat);
+            downloading += chatData[chat].downloading;
+            total += chatData[chat].total;
+        }
+        await bot.sendMessage(this.chat, {
+                message: strings[this.lang].stats
+                    .replace('{1}', Object.keys(chatData).length)
+                    .replace('{2}', downloading)
+                    .replace('{3}', total)
+                    .replace('{4}', chatData[this.chat].total),
+                parseMode: 'html',
+            }
+        );
     }
 }
 

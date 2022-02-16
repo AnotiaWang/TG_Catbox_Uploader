@@ -13,6 +13,8 @@ export async function transfer(msg) {
     let file = msg.media, fileSize, fileExt, fileName = randomString(), filePath;
     let lang = chatData[chat].lang, service = chatData[chat].service, editMsg;
 
+    if (chatData[chat].banned)
+        return bot.sendMessage(chat, { message: strings[lang].error_banned });
     if (chatData[chat].downloading >= MAX_DOWNLOADING)
         return bot.sendMessage(chat, { message: strings[lang].flood_protection.replace('{s}', MAX_DOWNLOADING) });
 
@@ -56,16 +58,17 @@ export async function transfer(msg) {
             });
         }
         else
-            result = await LitterBox.upload(filePath, chatData[chat].litterBoxExpr).catch((e) => {
+            result = await LitterBox.upload(filePath, chatData[chat].lbe).catch((e) => {
                 throw new Error(e);
             });
         bot.editMessage(chat, {
             message: editMsg.id, text: strings[lang].uploaded
-                .replace('{s}', service.toLowerCase() === 'catbox' ? '∞' : chatData[chat].litterBoxExpr) + result
+                .replace('{s}', service.toLowerCase() === 'catbox' ? '∞' : chatData[chat].lbe) + result
         }).catch(() => null);
+        chatData[chat].total++;
     }
     catch (e) {
-        console.error(`Error when uploading file from ${chat}:`, e);
+        console.error(`Error when uploading file from ${chat}:`, e.message);
         await bot.sendMessage(chat, { message: strings[lang].error + `\n${e.message}` });
     }
     finally {
