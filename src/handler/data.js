@@ -29,6 +29,9 @@ function loadBotData() {
         writeFileSync('./data/chatsList.json', JSON.stringify({}));
     else
         chatData = JSON.parse(readFileSync('./data/chatsList.json', 'utf-8')) || {};
+    for (let chat in chatData)
+        if (chatData[chat].downloading)
+            chatData[chat].downloading = 0;
 }
 
 export function launchBot() {

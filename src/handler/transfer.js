@@ -3,6 +3,7 @@ import { MAX_DOWNLOADING, chatData } from "./index.js";
 import strings from "../strings.js";
 import * as fs from "fs";
 import { bot } from "../../index.js";
+import mime from 'mime-types';
 
 const CatBox = new CatBoxMoe.Catbox();
 const LitterBox = new CatBoxMoe.Litterbox();
@@ -17,7 +18,7 @@ export async function transfer(msg) {
 
     if (file.document) {
         fileSize = file.document.size;
-        fileExt = file.document.mimeType.split('/')[1];
+        fileExt = mime.extension(file.document.mimeType);
     }
     else if (file.photo) {
         let sizes = file.photo.sizes[file.photo.sizes.length - 1].sizes;
@@ -39,7 +40,7 @@ export async function transfer(msg) {
     let buffer = await bot.downloadMedia(file, {});
     fs.writeFileSync(filePath, buffer);
     console.log(`${chat} 文件下载完成`);
-    bot.editMessage(chat, { message: editMsg.id, text: strings[lang].uploading.replace('{s}', service) });
+    await bot.editMessage(chat, { message: editMsg.id, text: strings[lang].uploading.replace('{s}', service) });
 
     try {
         let result;

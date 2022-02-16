@@ -14,8 +14,6 @@
 
 - [x] Multi-language support (zh_CN & en_US currently)
 
-- [ ] Auto save data; Auto/Manual save/reload data.
-
 - [x] Default settings customizable
 
 - [x] Supports private chats
