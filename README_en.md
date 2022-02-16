@@ -8,19 +8,21 @@
 
 ## Features
 
-- [x] Upload files(stickers, photos, audios, videos) under [20 MB](https://core.telegram.org/bots/api#getfile)
+- [x] Upload files (stickers, photos, audios, videos) 
 
-- [x] Supports Catbox and Litterbox as storage
+- [x] Supports Catbox (max 200 MB per file) and Litterbox (max 1 GB per file) as storage
 
-- [x] Multi-language support (zh_CN / en_US), can be customized
+- [x] Multi-language support (zh_CN & en_US currently)
 
-- [x] Auto save data; Auto/Manual save/reload data.
+- [ ] Auto save data; Auto/Manual save/reload data.
 
-- [x] Customizable strings & language & service & Litterbox file expiration & parallel file uploads
+- [x] Default settings customizable
 
-- [x] Supports groups and private chats
+- [x] Supports private chats
 
-- [x] Supports webhooks
+- [ ] Supports groups
+
+- [ ] Supports webhooks
 
 ## Deploy
 
@@ -28,32 +30,37 @@
 
 - Clone this repo
 
+- Configure the .env file, following the instructions below
+ 
 - Run the following command: (Node.js environment required)
 
 ```Bash
-npm install
-node bot
+npm install && npm start
 ```
 
 ## Variables
 
-- `token`: Bot token from BotFather.
+- `BOT_TOKEN`: Bot token from BotFather.
 
-- `admin_id`: Admin ID (Usually yours. Get it from [GetIDs Bot](https://t.me/getidsbot)).
+- `API_ID`: API ID obtained from my.telegram.org.
 
-- `log_channel`: Channel to store logs. Can be left empty. *This is only used to check if files violated the ToS*.
+- `API_HASH`: API hash obtained from my.telegram.org.
 
-- `lang`: [ `zh_CN` / `en_US` ] Default language for your users.
+- `ADMIN_ID`: Admin ID (Usually yours. Get it from [GetIDs Bot](https://t.me/getidsbot)).
 
-- `catbox_token`: [ Optional ] Catbox.moe token. If empty, bot will upload files anonymously. If specfied, you can manage the uploaded files in your Catbox account.
+- `LOG_CHANNEL_ID`: Channel to store logs. Can be left empty. *This is only needed to check if files violated the ToS*.
 
-- `service`: [ `Catbox` / `Litterbox` ] Default service for your users.
+- `DEFAULT_LANG`: [ `zh_CN` / `en_US` ] Default language for your users.
 
-- `LitterBoxExpr`: [ `1h` / `12h` / `24h` / `72h` ] Default expiration for your users, if they selected Litterbox as storage.
+- `CATBOX_TOKEN`: [ Optional ] Catbox.moe token. If empty, bot will upload files anonymously. If specfied, you can manage the uploaded files in your Catbox account.
 
-- `ParallelFiles`: Default number of parallel file uploads. (Recommended `1`)
+- `DEFAULT_SERVICE`: [ `Catbox` / `Litterbox` ] Default service for your users.
 
-- `webhook_url`: [ Optional ] Webhook URL. If not specified, bot will use polling as default. The port that express.js listens can be changed in the code. You may use a reverse proxy to make it work.
+- `DEFAULT_EXPR`: [ `1h` / `12h` / `24h` / `72h` ] Default expiration for your users, if they selected Litterbox as storage.
+
+- `MAX_DOWNLOADING`: Default number of parallel file uploads. (Recommended `1`)
+
+- `WEBHOOK_URL`: [ Optional ] Webhook URL. If not specified, bot will use polling as default. The port that express.js listens can be changed in the code. You may use a reverse proxy to make it work.
 
 ## Demo
 
