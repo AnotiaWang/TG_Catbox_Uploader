@@ -14,29 +14,34 @@ export async function handleCallbackQuery(event) {
     if (data.startsWith('setLang')) {
         if (arg)
             chatData[chat].lang = lang = arg;
-        bt = buttons.getLanguagesButtons(lang);
-        text = `<b>${strings[lang].settings_setLang}</b>` + strings[lang].help_setLang;
+        else {
+            bt = buttons.getLanguagesButtons(lang);
+            text = `<b>${strings[lang].settings_setLang}</b>` + strings[lang].help_setLang;
+        }
     }
     else if (data.startsWith('setService')) {
         if (arg)
             chatData[chat].service = arg;
-        bt = buttons.setService(chat);
-        text = `<b>${strings[lang].settings_setService}</b>` + strings[lang].help_setService;
+        else {
+            bt = buttons.setService(chat);
+            text = `<b>${strings[lang].settings_setService}</b>` + strings[lang].help_setService;
+        }
     }
     // Set Litterbox Expiration
     else if (data.startsWith('setLBE')) {
         if (arg)
             chatData[chat].lbe = parseInt(arg);
-        bt = buttons.setLitterBoxExpiration(lang, chat);
-        text = `<b>${strings[lang].settings_setExpr}</b>`;
+        else {
+            bt = buttons.setLitterBoxExpiration(lang, chat);
+            text = `<b>${strings[lang].settings_setExpr}</b>` + strings[lang].help_setExpr;
+        }
     }
-    else if (data === 'back') {
-        bt = buttons.mainSettings(lang);
+    // else if (data === 'back') { }
+    saveBotData();
+    if (!bt.length) {
+        bt = buttons.mainSettings(chat);
         text = `<b>${strings[lang].settings}</b>` + strings[lang].help_settings;
     }
-    saveBotData();
-    if (data !== 'back')
-        bt.push(buttons.back(lang)[0]);
     bot.editMessage(chat, {
         message: query.msgId,
         text: text,

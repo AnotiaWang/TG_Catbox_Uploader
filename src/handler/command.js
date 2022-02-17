@@ -80,7 +80,7 @@ class GeneralCommands {
         bot.sendMessage(this.chat, {
             message: strings[this.lang].settings,
             parseMode: 'html',
-            buttons: buttons.mainSettings(this.lang)
+            buttons: buttons.mainSettings(this.chat)
         }).catch(console.error);
     }
 

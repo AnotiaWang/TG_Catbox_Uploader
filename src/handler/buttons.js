@@ -8,14 +8,19 @@ function cb(text, data) {
 
 const setService = (chat) => {
     let t = (current) => chatData[chat].service === current ? ' ✅' : '';
-    return [[cb(`Catbox${t('Catbox')}`, 'setService_Catbox')], [cb(`Litterbox${t('Litterbox')}`, 'setService_Litterbox')]];
+    return [[
+        cb(`Catbox${t('Catbox')}`, 'setService_Catbox'),
+        cb(`Litterbox${t('Litterbox')}`, 'setService_Litterbox')],
+        back(chatData[chat].lang)[0]
+    ];
 }
 
-const mainSettings = (lang) => {
+const mainSettings = (chat) => {
+    let lang = chatData[chat].lang;
     return [[
-        cb(strings[lang].settings_setLang, 'setLang')], [
-        cb(strings[lang].settings_setService, 'setService')], [
-        cb(strings[lang].settings_setExpr, 'setLBE')
+        cb(strings[lang].settings_setLang + ` (${strings[lang].name})`, 'setLang')], [
+        cb(strings[lang].settings_setService + ` (${chatData[chat].service})`, 'setService')], [
+        cb(strings[lang].settings_setExpr + ` (${chatData[chat].lbe} ${strings[lang].hour})`, 'setLBE')
     ]];
 }
 
@@ -30,6 +35,7 @@ const getLanguagesButtons = (lang) => {
     }
     if (tmp.length > 0)
         buttons.push(tmp);
+    buttons.push(back(lang)[0]);
     return buttons;
 }
 
@@ -42,7 +48,7 @@ const setLitterBoxExpiration = (lang, chat) => {
     ], [
         cb(`24 ${hour}${t(24)}`, 'setLBE_24'),
         cb(`72 ${hour}${t(72)}`, 'setLBE_72')
-    ]];
+    ], back(lang)[0]];
 }
 
 const back = (lang) => {
