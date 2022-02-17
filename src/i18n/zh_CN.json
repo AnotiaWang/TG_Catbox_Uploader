@@ -1,14 +1,14 @@
 {
     "name": "简体中文",
-    "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 <a href=\"https://catbox.moe\">Catbox</a> 或 <a href=\"https://litterbox.catbox.moe\">Litterbox</a>，并返回文件的分享链接。\n上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> 以及 Litterbox ToS。\n\n命令列表：\n/help - 显示帮助信息\n/settings - 设置语言、存储服务、文件有效时长\n/upload -（群组中）回复一条带文件的消息以上传\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
-    "downloading": "正在下载...",
-    "uploading": "文件下载完成，正在上传到 {s}...",
-    "uploaded": "上传完成！文件链接（有效时长 {s}）👇\n",
-    "error": "上传失败！",
-    "flood_protection": "请先等待当前所有任务完成。最多同时下载 {s} 个文件。",
+    "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 <a href=\"https://catbox.moe\">Catbox</a> 或 <a href=\"https://litterbox.catbox.moe\">Litterbox</a>，并返回文件的分享链接。\n上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> 以及 Litterbox ToS。\n\n命令列表：\n/help - 显示帮助信息\n/settings - 设置语言、存储服务、文件有效时长\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
+    "downloading": "正在下载文件...",
+    "uploading": "正在上传至 {s}...",
+    "uploaded": "🗃️ 上传完成！\n\n存储服务：{1}\n有效期：{2}\n链接：{3}",
+    "error": "😥 上传失败！",
+    "flood_protection": "🚫 请先等待当前所有任务完成。最多同时下载 {s} 个文件。",
     "setSuccess": "√ 设置成功",
     "langSetText": "√ 已设置为简体中文。发送 /help 看看我能做什么！",
-    "err_FileTooBig": "文件过大，超出 {s} 限制！\n\nCatbox 限制：单文件最大 200 MB\nLitterbox 限制：单文件最大 1 GB",
+    "err_FileTooBig": "🚫 文件过大，超出 {s} 限制！\n\nCatbox 限制：单文件最大 200 MB\nLitterbox 限制：单文件最大 1 GB",
     "reloadSuccess": "✅ 已重新加载 config.json 和 strings.json",
     "settings": "⚙ 设置",
     "help_settings": "\n\n单击下方的按钮查看相关描述及选项。",
@@ -17,8 +17,6 @@
     "settings_setService": "☁ 存储服务",
     "help_setService": "\n\n<a href='https://catbox.moe'>Catbox</a> 文件不限时长，单文件限制 200 MB。\n<a href='https://litterbox.catbox.moe'>Litterbox</a> 文件有时限（1/12/24/72 小时），单文件限制 1 GB。\n\n一次只能选择将文件上传到其中一个服务。",
     "settings_setExpr": "⏰ Litterbox 文件有效期",
-    "settings_setLitterBoxExprSuccess": "Litterbox 的文件有效时长已设置为 {s}。",
-    "settings_setServiceSuccess": "√ 存储服务已设置为 {s}",
     "settings_back": "🔙 返回",
     "saveDataSuccess": "成功保存数据。",
     "hour": " 小时",
@@ -29,5 +27,6 @@
     "error_banned": "您已经被禁止使用此机器人。",
     "banned": "已封禁此用户。",
     "unbanned": "已解封此用户。",
-    "userNotFound": "未找到此用户。"
+    "userNotFound": "未找到此用户。",
+    "sendMeAFile": "👋 发送一个文件，以将其上传到 Catbox 或 Litterbox。您可以发送 /help 命令查看详情。"
 }

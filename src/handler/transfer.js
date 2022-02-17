@@ -22,7 +22,7 @@ export async function transfer(msg) {
         fileSize = file.document.size;
         if (file.document.mimeType === 'application/x-tgsticker') {
             fileExt = 'tgs';
-            await bot.sendMessage(chat, {message: strings[lang].animatedStickers, parseMode: 'html', linkPreview: false});
+            await bot.sendMessage(chat, { message: strings[lang].animatedStickers, parseMode: 'html', linkPreview: false });
         }
         else
             fileExt = mime.extension(file.document.mimeType);
@@ -33,7 +33,7 @@ export async function transfer(msg) {
         fileExt = 'png';
     }
 
-    if ((service === 'Catbox' &&  fileSize > 200000000) || (service === 'Litterbox' && fileSize > 1000000000))
+    if ((service === 'Catbox' && fileSize > 200000000) || (service === 'Litterbox' && fileSize > 1000000000))
         return bot.sendMessage(chat, { message: strings[lang].err_FileTooBig.replace('{s}', service) });
 
     editMsg = await bot.sendMessage(chat, { message: strings[lang].downloading, replyTo: msg.id });
@@ -48,7 +48,7 @@ export async function transfer(msg) {
     console.log(`Downloading: ${filePath}`);
     let buffer = await bot.downloadMedia(file, {});
     fs.writeFileSync(filePath, buffer);
-    console.log(`File ${filePath} downloaded`);
+    console.log(`Downloaded ${filePath}, now uploading...`);
     await bot.editMessage(chat, { message: editMsg.id, text: strings[lang].uploading.replace('{s}', service) });
     let result = 'None';
     try {
@@ -61,21 +61,26 @@ export async function transfer(msg) {
             result = await LitterBox.upload(filePath, chatData[chat].lbe).catch((e) => {
                 throw new Error(e);
             });
-        bot.editMessage(chat, {
-            message: editMsg.id, text: strings[lang].uploaded
-                .replace('{s}', service.toLowerCase() === 'catbox' ? '∞' : chatData[chat].lbe) + result
+        bot.sendMessage(chat, {
+            message: strings[lang].uploaded
+                .replace('{1}', service)
+                .replace('{2}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat].lbe + ` ${strings[lang].hour}`))
+                .replace('{3}', result),
+            replyTo: msg.id
         }).catch(() => null);
         chatData[chat].total++;
+        console.log(`Uploaded ${filePath} to ${service}`);
     }
     catch (e) {
-        console.error(`Error when uploading file from ${chat}:`, e.message);
-        await bot.sendMessage(chat, { message: strings[lang].error + `\n${e.message}` });
+        console.error(`Upload ${filePath} failed:`, e.message);
+        await bot.sendMessage(chat, { message: strings[lang].error + `\n\n${e.message}`, replyTo: msg.id });
     }
     finally {
         fs.rmSync(filePath);
         chatData[chat].downloading--;
+        bot.deleteMessages(chat, [editMsg.id], { revoke: true }).catch(() => null);
         if (LOG_CHANNEL_ID) {
-            let log = await bot.forwardMessages(LOG_CHANNEL_ID, {messages: msg.id, fromPeer: chat}).catch(console.error);
+            let log = await bot.forwardMessages(LOG_CHANNEL_ID, { messages: msg.id, fromPeer: chat }).catch(console.error);
             await bot.sendMessage(LOG_CHANNEL_ID, { message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``, replyTo: log[0].id });
         }
     }

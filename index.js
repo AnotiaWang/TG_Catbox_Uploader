@@ -4,6 +4,7 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { handleMessage, handleCallbackQuery, launchBot, BOT_TOKEN, API_ID, API_HASH } from "./src/handler/index.js";
 import {LogLevel} from "telegram/extensions/Logger.js";
 import {CallbackQuery} from "telegram/events/CallbackQuery.js";
+import {NewMessage} from "telegram/events/index.js";
 
 const stringSession = new StringSession(existsSync('./data/.session') ? readFileSync('./data/.session', 'utf-8') : "");
 
@@ -18,12 +19,8 @@ writeFileSync('./data/.session', bot.session.save());
 console.log('[Bot] Launched successfully.');
 
 bot.setLogLevel(LogLevel.ERROR);
-bot.addEventHandler(async (update) => {
-    if (update.className === 'UpdateNewMessage')
-        await handleMessage(update.message);
-});
+bot.addEventHandler(handleMessage, new NewMessage({}));
 bot.addEventHandler(handleCallbackQuery, new CallbackQuery());
-
 
 process.on('unhandledRejection', (reason, promise) => {
     console.error(reason, 'Unhandled Rejection at', promise);

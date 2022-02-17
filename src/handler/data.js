@@ -9,7 +9,7 @@ export const template = {
     downloading: 0,
     total: 0,
     service: DEFAULT_SERVICE,
-    lbe: DEFAULT_EXPR,
+    lbe: parseInt(DEFAULT_EXPR),
     banned: false
 };
 
