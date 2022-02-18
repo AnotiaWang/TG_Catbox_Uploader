@@ -2,9 +2,9 @@ import { TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions/index.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { handleMessage, handleCallbackQuery, launchBot, BOT_TOKEN, API_ID, API_HASH } from "./src/handler/index.js";
-import {LogLevel} from "telegram/extensions/Logger.js";
-import {CallbackQuery} from "telegram/events/CallbackQuery.js";
-import {NewMessage} from "telegram/events/index.js";
+import { LogLevel } from "telegram/extensions/Logger.js";
+import { CallbackQuery } from "telegram/events/CallbackQuery.js";
+import { NewMessage } from "telegram/events/index.js";
 
 const stringSession = new StringSession(existsSync('./data/.session') ? readFileSync('./data/.session', 'utf-8') : "");
 

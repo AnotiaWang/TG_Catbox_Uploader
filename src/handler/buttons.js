@@ -11,7 +11,7 @@ const setService = (chat) => {
     return [[
         cb(`Catbox${t('Catbox')}`, 'setService_Catbox'),
         cb(`Litterbox${t('Litterbox')}`, 'setService_Litterbox')],
-        back(chatData[chat].lang)[0]
+    back(chatData[chat].lang)[0]
     ];
 }
 

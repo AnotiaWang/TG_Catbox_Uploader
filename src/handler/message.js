@@ -1,4 +1,4 @@
-import {chatData, handleCommand, initChatData, transfer} from "./index.js";
+import { chatData, handleCommand, initChatData, transfer } from "./index.js";
 import { bot } from "../../index.js";
 import strings from "../strings.js";
 

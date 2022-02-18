@@ -1,5 +1,5 @@
-import strings  from "../strings.js";
-import {chatData, ADMIN_ID, buttons, initChatData, saveBotData} from "./index.js";
+import strings from "../strings.js";
+import { chatData, ADMIN_ID, buttons, initChatData, saveBotData } from "./index.js";
 import { bot, BOT_NAME } from "../../index.js";
 
 export async function handleCommand(msg) {
@@ -22,7 +22,7 @@ class OwnerCommands {
         this.lang = chatData[this.chat].lang;
     }
 
-    ban (arg) {
+    ban(arg) {
         if (arg) {
             let user = parseInt(arg);
             if (chatData[user]) {
@@ -40,7 +40,7 @@ class OwnerCommands {
                 .catch(console.error);
     }
 
-    unban (arg) {
+    unban(arg) {
         if (arg) {
             let user = parseInt(arg);
             if (chatData[user]) {
@@ -92,13 +92,13 @@ class GeneralCommands {
             total += chatData[chat].total;
         }
         await bot.sendMessage(this.chat, {
-                message: strings[this.lang].stats
-                    .replace('{1}', Object.keys(chatData).length)
-                    .replace('{2}', downloading)
-                    .replace('{3}', total)
-                    .replace('{4}', chatData[this.chat].total),
-                parseMode: 'html',
-            }
+            message: strings[this.lang].stats
+                .replace('{1}', Object.keys(chatData).length)
+                .replace('{2}', downloading)
+                .replace('{3}', total)
+                .replace('{4}', chatData[this.chat].total),
+            parseMode: 'html',
+        }
         );
     }
 }

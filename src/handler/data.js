@@ -23,7 +23,7 @@ export function initChatData(user) {
             if (!chatData[user][key]) {
                 chatData[user][key] = template[key];
             }
-    }
+        }
     saveBotData();
 }
 
