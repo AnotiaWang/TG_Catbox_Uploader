@@ -137,7 +137,7 @@ export async function transfer(msg) {
             isDownloadSuccess = true;
         } catch (e) {
             console.log(`Failed to download ${filePath} by chunks, try downloadMedia. Reason:`, e.message);
-            await bot.editMessage(chat, {message: editMsg.id, text: strings[lang].downloading}).catch(() => {});
+            await bot.editMessage(chat, { message: editMsg.id, text: strings[lang].downloading }).catch(() => { });
             if (fileSize > freemem()) {
                 console.log(`Cannot download ${filePath}: Out of Memory`);
                 errMsg = strings[lang].error_outOfMemory;

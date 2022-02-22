@@ -54,6 +54,27 @@ class OwnerCommands {
             bot.sendMessage(this.chat, { message: 'Usage: /unban UID' })
                 .catch(console.error);
     }
+
+    async broadcast(text) {
+        if (!text)
+            return bot.sendMessage(ADMIN_ID, { message: 'Come on, say something.' });
+        let chats = Object.keys(chatData);
+        let count = chats.length;
+        let result = await bot.sendMessage(ADMIN_ID, { message: `Start broadcasting tp ${count} chats...` });
+        let edit = setInterval(() => {
+            bot.editMessage(ADMIN_ID, { message: result.id, text: `Broadcasting, remaining ${chats.length} / ${count}...` }).catch(() => null);
+        }, 2000);
+        while (chats.length) {
+            let chat = chats.shift();
+            await bot.sendMessage(chat, { message: text }).catch((e) => {
+                if (e.message.toLowerCase().includes('flood'))
+                    chats.push(chat);
+            });
+            await sleep(100);
+        }
+        clearInterval(edit);
+        await bot.editMessage(ADMIN_ID, { message: result.id, text: 'Broadcast success!' });
+    }
 }
 
 class GeneralCommands {
@@ -147,3 +168,6 @@ export function isGroup(ctx) {
     return ctx.message.chat.type === 'group' || ctx.message.chat.type === 'supergroup';
 }
 
+function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+}
