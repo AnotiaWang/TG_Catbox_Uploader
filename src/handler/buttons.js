@@ -20,7 +20,8 @@ const mainSettings = (chat) => {
     return [[
         cb(strings[lang].settings_setLang + ` (${strings[lang].name})`, 'setLang')], [
         cb(strings[lang].settings_setService + ` (${chatData[chat].service})`, 'setService')], [
-        cb(strings[lang].settings_setExpr + ` (${chatData[chat].lbe} ${strings[lang].hour})`, 'setLBE')
+        cb(strings[lang].settings_setExpr + ` (${chatData[chat].lbe} ${strings[lang].hour})`, 'setLBE')], [
+        cb(strings[lang].token, 'setToken')
     ]];
 }
 
@@ -51,8 +52,16 @@ const setLitterBoxExpiration = (lang, chat) => {
     ], back(lang)[0]];
 }
 
+const setToken = (chat) => {
+    let lang = chatData[chat].lang;
+    let bt = [back(lang)[0]];
+    if (chatData[chat].token)
+        bt.unshift([cb(strings[lang].unbindToken, 'setToken_unbind')]);
+    return bt;
+}
+
 const back = (lang) => {
     return [[cb(strings[lang].settings_back, 'back')]];
 }
 
-export { getLanguagesButtons, mainSettings, setService, setLitterBoxExpiration, back };
+export { getLanguagesButtons, mainSettings, setService, setLitterBoxExpiration, back, setToken };

@@ -1,4 +1,4 @@
-import CatBoxMoe from "catbox.moe";
+import CatBox from "catbox.moe";
 import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID, CATBOX_TOKEN } from "./index.js";
 import strings from "../strings.js";
 import * as fs from "fs";
@@ -7,9 +7,6 @@ import mime from 'mime-types';
 import { Api } from "telegram";
 import { freemem } from 'os';
 import { createHash } from 'crypto';
-
-const CatBox = new CatBoxMoe.Catbox(CATBOX_TOKEN);
-const LitterBox = new CatBoxMoe.Litterbox();
 
 export async function transfer(msg) {
     function getFileQuery(id, accessHash, fileReference, offset, limit) {
@@ -23,7 +20,7 @@ export async function transfer(msg) {
             limit: limit,
             offset: offset,
             precise: true
-        })
+        });
     }
 
     function getFileHashQuery(id, accessHash, fileReference, offset) {
@@ -41,7 +38,9 @@ export async function transfer(msg) {
     let chat = parseInt(msg.peerId.userId.value);
     let file = msg.media.document || msg.media.photo;
     let fileSize, fileExt, fileName = randomString(), filePath;
-    let lang = chatData[chat].lang, service = chatData[chat].service, editMsg, isDownloadSuccess = false, errMsg = '';
+    let lang = chatData[chat].lang, service = chatData[chat].service, editMsg, isDownloadSuccess = false, errMsg = '', retry = 0;
+    let Catbox = new CatBox.Catbox(chatData[chat].token || CATBOX_TOKEN || undefined);
+    let Litterbox = new CatBox.Litterbox();
 
     if (chatData[chat].banned)
         return bot.sendMessage(chat, { message: strings[lang].error_banned });
@@ -99,6 +98,7 @@ export async function transfer(msg) {
                     console.log(`Get chunks failed：${e.message}`);
                     if (e.message.toLowerCase().includes('disconnect')) {
                         console.log(`${filePath} connection lost, retrying...`);
+                        await sleep(5000);
                         await bot.connect();
                         continue;
                     } else throw e;
@@ -111,9 +111,13 @@ export async function transfer(msg) {
                         console.log(`Download chunk failed:`, e.message);
                         if (e.message.toLowerCase().includes('disconnect')) {
                             console.log(`Connection lost, retrying...`);
+                            await sleep(5000);
                             await bot.connect();
                             i--;
-                            continue;
+                            retry++;
+                            if (retry > 3)
+                                throw e;
+                            else continue;
                         }
                     }
                     tempHash.update(chunkData);
@@ -133,6 +137,7 @@ export async function transfer(msg) {
             isDownloadSuccess = true;
         } catch (e) {
             console.log(`Failed to download ${filePath} by chunks, try downloadMedia. Reason:`, e.message);
+            await bot.editMessage(chat, {message: editMsg.id, text: strings[lang].downloading}).catch(() => {});
             if (fileSize > freemem()) {
                 console.log(`Cannot download ${filePath}: Out of Memory`);
                 errMsg = strings[lang].error_outOfMemory;
@@ -155,13 +160,9 @@ export async function transfer(msg) {
         let result = 'None';
         try {
             if (service.toLowerCase() === 'catbox') {
-                result = await CatBox.upload(filePath).catch((e) => {
-                    throw new Error(e);
-                });
+                result = await Catbox.upload(filePath);
             } else
-                result = await LitterBox.upload(filePath, chatData[chat].lbe).catch((e) => {
-                    throw new Error(e);
-                });
+                result = await Litterbox.upload(filePath, chatData[chat].lbe);
             bot.sendMessage(chat, {
                 message: strings[lang].uploaded
                     .replace('{1}', service)
@@ -201,3 +202,5 @@ function randomString(e = 8) {
         n += t.charAt(Math.floor(Math.random() * a));
     return n;
 }
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
