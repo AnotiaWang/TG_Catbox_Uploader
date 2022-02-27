@@ -4,7 +4,7 @@
     "downloading": "Downloading...",
     "uploading": "File downloaded successfully. Now uploading to {s}...",
     "uploaded": "🗃️ Uploaded Successfully!\n\nService: {1}\nValidity: {2}\nLink: {3}",
-    "error": "😥 Transfer failed!",
+    "error": "😥 Transfer failed! Maybe the server is overloaded, please try later.",
     "flood_protection": "🚫 Please wait for the current files to finish uploading. Max files allowed at one time {s}.",
     "setSuccess": "√ Set!",
     "langSetText": "√ Language set to English. Send /help to see what I can do! ",

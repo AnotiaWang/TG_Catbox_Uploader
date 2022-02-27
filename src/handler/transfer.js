@@ -163,15 +163,22 @@ export async function transfer(msg) {
                 result = await Catbox.upload(filePath);
             } else
                 result = await Litterbox.upload(filePath, chatData[chat].lbe);
-            bot.sendMessage(chat, {
-                message: strings[lang].uploaded
-                    .replace('{1}', service)
-                    .replace('{2}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat].lbe + ` ${strings[lang].hour}`))
-                    .replace('{3}', result),
-                replyTo: msg.id
-            }).catch(() => null);
-            chatData[chat].total++;
-            console.log(`Uploaded ${filePath} to ${service}`);
+            // If the result contains a link, which indicates the transfer was successful
+            if (result.startsWith('https://')) {
+                await bot.sendMessage(chat, {
+                    message: strings[lang].uploaded
+                        .replace('{1}', service)
+                        .replace('{2}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat].lbe + ` ${strings[lang].hour}`))
+                        .replace('{3}', result),
+                    replyTo: msg.id
+                });
+                chatData[chat].total++;
+                console.log(`Uploaded ${filePath} to ${service}`);
+            }
+            else {
+                await bot.sendMessage(chat, { message: strings[lang].error + `\n\nResponse: ${result}`, replyTo: msg.id, parseMode: 'html' });
+                console.error(`Upload ${filePath} failed, error: ${result}`);
+            }
             if (LOG_CHANNEL_ID) {
                 let log = await bot.forwardMessages(LOG_CHANNEL_ID, {
                     messages: msg.id,
