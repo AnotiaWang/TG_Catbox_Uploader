@@ -1,7 +1,7 @@
 import { TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions/index.js';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { handleMessage, handleCallbackQuery, launchBot, BOT_TOKEN, API_ID, API_HASH } from "./src/handler/index.js";
+import { handleMessage, handleCallbackQuery, launchBot, loadBotData, BOT_TOKEN, API_ID, API_HASH } from "./src/handler/index.js";
 import { LogLevel } from "telegram/extensions/Logger.js";
 import { CallbackQuery } from "telegram/events/CallbackQuery.js";
 import { NewMessage } from "telegram/events/index.js";
@@ -14,6 +14,7 @@ await bot.start({
     botAuthToken: BOT_TOKEN
 });
 await bot.connect();
+loadBotData();
 export const BOT_NAME = (await bot.getMe()).username;
 writeFileSync('./data/.session', bot.session.save());
 console.log('[Bot] Launched successfully.');
