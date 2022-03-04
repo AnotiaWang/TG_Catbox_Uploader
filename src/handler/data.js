@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'fs';
+import {bot} from "../../index.js";
+import strings from "../strings.js";
 
 export const {
     DEFAULT_LANG,
@@ -48,8 +50,10 @@ function loadBotData() {
     if (existsSync('./data/chatsList.json'))
         chatData = JSON.parse(readFileSync('./data/chatsList.json', 'utf-8')) || {};
     for (let chat in chatData)
-        if (chatData[chat].downloading)
+        if (chatData[chat].downloading) {
             chatData[chat].downloading = 0;
+            bot.sendMessage(chat, { message: strings[chatData[chat].lang].error }).catch();
+        }
 }
 
 export function launchBot() {
