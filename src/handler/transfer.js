@@ -76,7 +76,8 @@ export async function transfer(msg) {
     filePath = `./cache/${chat}_${fileName}.${fileExt}`;
     console.log(`Start downloading: ${filePath} (Size ${fileSize})...`);
 
-    if (file.className === 'Photo') {
+    // File size < 20 MB
+    if (fileSize < 20000000) {
         try {
             let buffer = await bot.downloadMedia(file, {});
             fs.writeFileSync(filePath, buffer);
@@ -100,7 +101,10 @@ export async function transfer(msg) {
                         console.log(`${filePath} connection lost, retrying...`);
                         await sleep(5000);
                         await bot.connect();
-                        continue;
+                        retry++;
+                        if (retry > 3)
+                            throw e;
+                        else continue;
                     } else throw e;
                 }
                 for (let i = 0; i < chunks.length; i++) {
