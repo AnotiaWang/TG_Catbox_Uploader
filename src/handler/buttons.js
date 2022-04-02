@@ -2,10 +2,12 @@ import strings from "../strings.js";
 import { Button } from "telegram/tl/custom/button.js";
 import { chatData } from "./data.js";
 
+// Shorthand for the buttons
 function cb(text, data) {
     return Button.inline(text, Buffer.from(data));
 }
 
+// Select a storage service (Catbox / Litterbox)
 const setService = (chat) => {
     let t = (current) => chatData[chat].service === current ? ' ✅' : '';
     return [[
@@ -15,20 +17,22 @@ const setService = (chat) => {
     ];
 }
 
+// The main menu of settings
 const mainSettings = (chat) => {
     let lang = chatData[chat].lang;
     return [[
-        cb(strings[lang].settings_setLang + ` (${strings[lang].name})`, 'setLang')], [
-        cb(strings[lang].settings_setService + ` (${chatData[chat].service})`, 'setService')], [
-        cb(strings[lang].settings_setExpr + ` (${chatData[chat].lbe} ${strings[lang].hour})`, 'setLBE')], [
-        cb(strings[lang].token, 'setToken')
+        cb(strings[lang]["settings_setLang"] + ` (${strings[lang]["name"]})`, 'setLang')], [
+        cb(strings[lang]["settings_setService"] + ` (${chatData[chat]["service"]})`, 'setService')], [
+        cb(strings[lang]["settings_setExpr"] + ` (${chatData[chat]["lbe"]} ${strings[lang]["hour"]})`, 'setLBE')], [
+        cb(strings[lang]["token"], 'setToken')
     ]];
 }
 
-const getLanguagesButtons = (lang) => {
+// Set the language of the bot
+const setLanguage = (lang) => {
     let buttons = [], tmp = [];
     for (let i18n in strings) {
-        tmp.push(cb(strings[i18n].name + (lang === i18n ? ' ✅' : ''), `setLang_${i18n}`));
+        tmp.push(cb(strings[i18n]["name"] + (lang === i18n ? ' ✅' : ''), `setLang_${i18n}`));
         if (tmp.length === 2) {
             buttons.push(tmp);
             tmp = [];
@@ -41,8 +45,8 @@ const getLanguagesButtons = (lang) => {
 }
 
 const setLitterBoxExpiration = (lang, chat) => {
-    let hour = strings[lang].hour;
-    let t = (current) => chatData[chat].lbe === current ? ' ✅' : '';
+    let hour = strings[lang]["hour"];
+    let t = (current) => chatData[chat]["lbe"] === current ? ' ✅' : '';
     return [[
         cb(`1 ${hour}${t(1)}`, 'setLBE_1'),
         cb(`12 ${hour}${t(12)}`, 'setLBE_12')
@@ -52,16 +56,18 @@ const setLitterBoxExpiration = (lang, chat) => {
     ], back(lang)[0]];
 }
 
+// Set the token of Catbox
 const setToken = (chat) => {
-    let lang = chatData[chat].lang;
+    let lang = chatData[chat]["lang"];
     let bt = [back(lang)[0]];
-    if (chatData[chat].token)
-        bt.unshift([cb(strings[lang].unbindToken, 'setToken_unbind')]);
+    if (chatData[chat]["token"])
+        bt.unshift([cb(strings[lang]["unbindToken"], 'setToken_unbind')]);
     return bt;
 }
 
+// Back button
 const back = (lang) => {
-    return [[cb(strings[lang].settings_back, 'back')]];
+    return [[cb(strings[lang]["settings_back"], 'back')]];
 }
 
-export { getLanguagesButtons, mainSettings, setService, setLitterBoxExpiration, back, setToken };
+export { setLanguage, mainSettings, setService, setLitterBoxExpiration, back, setToken };

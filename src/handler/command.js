@@ -3,14 +3,18 @@ import { chatData, ADMIN_ID, buttons, initChatData, saveBotData } from "./index.
 import { bot, BOT_NAME } from "../../index.js";
 import CatBox from "catbox.moe";
 
+// Bot command handler
 export async function handleCommand(msg) {
     let text = msg.message, chat = parseInt(msg.peerId.userId.value);
     let command = text.split(" ")[0].substring(1);
     let mention = command.split("@")[1];
+    // If the text contains mention, need to check if the mentioned target is the bot
     if (mention && mention !== BOT_NAME)
         return;
+    // Split the text into command and arguments
     command = command.split('@')[0];
     let arg = text.split(" ").slice(1).join(" ");
+    // Check if the command is valid
     if (GeneralCommands.prototype.hasOwnProperty(command))
         new GeneralCommands(msg)[command](arg);
     else if (OwnerCommands.prototype.hasOwnProperty(command) && chat.toString() === ADMIN_ID)
@@ -29,10 +33,10 @@ class OwnerCommands {
             if (chatData[user]) {
                 chatData[user].banned = true;
                 saveBotData();
-                bot.sendMessage(this.chat, { message: strings[this.lang].banned })
+                bot.sendMessage(this.chat, { message: strings[this.lang]["banned"] })
                     .catch(console.error);
             } else
-                bot.sendMessage(this.chat, { message: strings[this.lang].userNotFound })
+                bot.sendMessage(this.chat, { message: strings[this.lang]["userNotFound"] })
                     .catch(console.error);
         } else
             bot.sendMessage(this.chat, { message: 'Usage: /ban UID' })
@@ -45,10 +49,10 @@ class OwnerCommands {
             if (chatData[user]) {
                 chatData[user].banned = false;
                 saveBotData();
-                bot.sendMessage(this.chat, { message: strings[this.lang].unbanned })
+                bot.sendMessage(this.chat, { message: strings[this.lang]["unbanned"] })
                     .catch(console.error);
             } else
-                bot.sendMessage(this.chat, { message: strings[this.lang].userNotFound })
+                bot.sendMessage(this.chat, { message: strings[this.lang]["userNotFound"] })
                     .catch(console.error);
         } else
             bot.sendMessage(this.chat, { message: 'Usage: /unban UID' })
@@ -87,13 +91,13 @@ class GeneralCommands {
         bot.sendMessage(this.chat, {
             message: '🐱 <b>欢迎！请在下方选择您的语言。发送 /help 命令查看帮助。\n\nWelcome! Please select a language below. Send /help to see what I can do.</b>',
             parseMode: 'html',
-            buttons: buttons.getLanguagesButtons(this.lang)
+            buttons: buttons.setLanguage(this.lang)
         }).catch(console.error);
     }
 
     help() {
         bot.sendMessage(this.chat, {
-            message: strings[this.lang].help,
+            message: strings[this.lang]["help"],
             parseMode: 'html',
             linkPreview: false
         }).catch(console.error);
@@ -101,7 +105,7 @@ class GeneralCommands {
 
     settings() {
         bot.sendMessage(this.chat, {
-            message: strings[this.lang].settings,
+            message: strings[this.lang]["settings"],
             parseMode: 'html',
             buttons: buttons.mainSettings(this.chat)
         }).catch(console.error);
@@ -115,7 +119,7 @@ class GeneralCommands {
             total += chatData[chat].total;
         }
         await bot.sendMessage(this.chat, {
-            message: strings[this.lang].stats
+            message: strings[this.lang]["stats"]
                 .replace('{1}', Object.keys(chatData).length)
                 .replace('{2}', downloading)
                 .replace('{3}', total)
@@ -132,21 +136,21 @@ class GeneralCommands {
                 let result = await Catbox.delete(link), text;
                 {
                     if (result.includes('successful'))
-                        text = strings[this.lang].deleteFileSuccess;
+                        text = strings[this.lang]["deleteFileSuccess"];
                     else if (result.includes('doesn\'t exist'))
-                        text = strings[this.lang].operationFailed.replace('{s}', strings[this.lang].fileNotFound);
+                        text = strings[this.lang]["operationFailed"].replace('{s}', strings[this.lang]["fileNotFound"]);
                     else if (result.includes('didn\'t belong to'))
-                        text = strings[this.lang].operationFailed.replace('{s}', strings[this.lang].fileWrongOwnership);
-                    else text = strings[this.lang].unknownError;
+                        text = strings[this.lang]["operationFailed"].replace('{s}', strings[this.lang]["fileWrongOwnership"]);
+                    else text = strings[this.lang]["unknownError"];
                     await bot.sendMessage(this.chat, { message: text });
                 }
             } else await bot.sendMessage(this.chat, {
-                message: strings[this.lang].err_TokenNeeded,
+                message: strings[this.lang]["err_TokenNeeded"],
                 parseMode: 'html',
                 linkPreview: false
             });
         } else await bot.sendMessage(this.chat, {
-            message: strings[this.lang].help_delete,
+            message: strings[this.lang]["help_delete"],
             parseMode: 'html'
         })
     }
@@ -154,10 +158,10 @@ class GeneralCommands {
     async token(token) {
         if (token) {
             chatData[this.chat].token = token;
-            await bot.sendMessage(this.chat, { message: strings[this.lang].setSuccess });
+            await bot.sendMessage(this.chat, { message: strings[this.lang]["setSuccess"] });
         } else
             await bot.sendMessage(this.chat, {
-                message: strings[this.lang].help_token.replace('{t}', chatData[this.chat].token || '🚫'),
+                message: strings[this.lang]["help_token"].replace('{t}', chatData[this.chat].token || '🚫'),
                 parseMode: 'html',
                 linkPreview: false
             });

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'fs';
-import {bot} from "../../index.js";
+import { bot } from "../../index.js";
 import strings from "../strings.js";
 
 export const {
@@ -53,7 +53,7 @@ export function loadBotData() {
     for (let chat in chatData)
         if (chatData[chat].downloading) {
             chatData[chat].downloading = 0;
-            bot.sendMessage(chat, { message: strings[chatData[chat].lang].error }).catch();
+            bot.sendMessage(chat, { message: strings[chatData[chat].lang]["error"] }).catch();
         }
     let i18n = readdirSync('./src/i18n');
     console.log(`[Bot] Loaded data from ${Object.keys(chatData).length} chat(s)`);
