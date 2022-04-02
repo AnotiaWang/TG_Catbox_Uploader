@@ -2,6 +2,7 @@
     "name": "English",
     "help": "🐱 <b>Welcome to Catbox Uploader!</b>\n\nThis bot can upload your files to <a href=\"https://catbox.moe\">Catbox</a> or <a href=\"https://litterbox.catbox.moe\">Litterbox</a>, and return the file's share link. \nThe files you uploaded mustn't violate the <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> and Litterbox ToS.\n\nCommands:\n/help - Send this help info\n/settings - Choose a language, service or file expiration.\n/delete - Delete files uploaded to Catbox.\n/token - Bind your Catbox token. Also visible in settings.\n\nTake a look at my channel @atashare and @atabots for interesting websites and update notes!\nSource code：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
     "downloading": "Downloading...",
+    "downloadProgress": "<b>📥 Downloading</b>\n\n<b>Total size: </b>{1} MB\n<b>Downloaded: </b>{2} MB\n<b>Speed: </b>{3} MB/s\n<b>ETA: </b>{4}",
     "uploading": "File downloaded successfully. Now uploading to {s}...",
     "uploaded": "🗃️ Uploaded Successfully!\n\nService: {1}\nValidity: {2}\nLink: {3}",
     "error": "😥 Transfer failed! Maybe the server is overloaded or network isn't stable now, please try later.",

@@ -52,17 +52,30 @@ export async function transfer(msg) {
 
     // The last time when the message is edited, in UNIX timestamp format
     let lastEditTime = Date.now();
-
+    let lastDownloadSize = 0;
     try {
         await bot.downloadMedia(msg, {
             outputFile: filePath,
             progressCallback: (downloaded, total) => {
                 // Limit the edit time interval to 2000 ms
-                if (Date.now() - lastEditTime > 2000) {
+                if (downloaded && Date.now() - lastEditTime > 3000) {
+                    // Convert to MB
+                    downloaded = (downloaded / 1000 / 1000).toFixed(2);
+                    total = (total / 1000 / 1000).toFixed(2);
+                    let speed = ((downloaded - lastDownloadSize) / 3).toFixed(2);
+                    let text = strings[lang]["downloadProgress"]
+                        .replace('{1}', total)
+                        .replace('{2}', downloaded)
+                        .replace('{3}', speed)
+                        .replace('{4}', secToTime(Math.round((total - downloaded) / speed)));
+                    let percent = Math.round(downloaded / total * 100);
+                    text += '\n\n<code>[' + '●'.repeat(percent / 5.5) + '○'.repeat(18 - percent / 5.5) + ']</code>';
                     lastEditTime = Date.now();
+                    lastDownloadSize = downloaded;
                     bot.editMessage(chat, {
                         message: editMsg.id,
-                        text: strings[lang]["downloading"] + '...' + (downloaded / total * 100).toFixed(1) + '%'
+                        text: text,
+                        parseMode: 'html'
                     }).catch(() => { });
                 }
             }
@@ -137,9 +150,16 @@ function randomString(e = 8) {
  *  @param {string} text Log content
  *  @param {boolean} alert If true, send the content to bot owner via Telegram
  */
-export function log(text, alert = false) {
+function log(text, alert = false) {
     console.log(new Date().toLocaleString('zh-CN') + ': ' + text);
     if (alert) {
         bot.sendMessage(ADMIN_ID, { message: text }).catch(() => { });
     }
+}
+
+function secToTime(sec) {
+    let hour = Math.floor(sec / 3600);
+    let min = Math.floor((sec - hour * 3600) / 60);
+    let secs = sec - hour * 3600 - min * 60;
+    return `${hour}:${min}:${secs}`;
 }
