@@ -22,8 +22,6 @@
 
 - [ ] 支持群组中调用
 
-- [ ] 支持 Webhook
-
 ## 部署
 
 - 点个 Star 😘
@@ -68,11 +66,15 @@ npm install && npm start
 
 ## 贡献翻译
 
-
 1. Fork 此仓库
+
 2. 在 `/src/i18n` 文件夹下新建文件，以 `[语言代码].json` 命名（如有短杠 `-`，改为下划线 `_`）。示例：`zh_CN.json`。语言代码可参考 [这里](http://www.lingoes.net/zh/translator/langcode.htm) 。
+
 3. 按照 `zh_CN.json` 文件进行翻译。所有属性必须翻译。
+
 4. 翻译完善后，提交到你的仓库，然后新建一个 Pull Request 。
+
+> 您也可以在 Web IDE 中编辑文件，然后直接新建 PR。
 
 ## 开源许可
 

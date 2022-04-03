@@ -10,17 +10,15 @@
 
 - [x] Upload files (stickers, photos, audios, videos) 
 
-- [x] Supports Catbox (max 200 MB per file) and Litterbox (max 1 GB per file) as storage
+- [x] Use Catbox (max 200 MB per file) and Litterbox (max 1 GB per file) as storage
 
 - [x] Multi-language support (zh_CN & en_US currently)
 
 - [x] Default settings customizable
 
-- [x] Supports private chats
+- [x] Available in private chats
 
-- [ ] Supports groups
-
-- [ ] Supports webhooks
+- [ ] Available in groups
 
 ## Deploy
 
@@ -29,7 +27,7 @@
 - Clone this repo
 
 - Configure the .env file, following the instructions below
- 
+
 - Run the following command: (Node.js environment required)
 
 ```Bash
@@ -67,9 +65,14 @@ npm install && npm start
 ## Translations
 
 1. Fork this repo
+
 2. Create a new file in the `src/i18n` folder, named `[language_code].json`, replace `-` (if exist) to `_`(e.g. `en_US.json`). For list of language codes, see [here](http://www.lingoes.net/zh/translator/langcode.htm)
+
 3. Edit the file, and add your translation, according to `zh_CN.json` (Chinese is my mother tongue, so the expressions may be more accurate. You can also choose other files as the source). All properties in `zh_CN.json` are required.
+
 4. Commit and push your changes. Create a Pull Request. 
+
+> You can also directly edit the files in Web IDE, and create Pull Request after modifying.
 
 ## License
 
