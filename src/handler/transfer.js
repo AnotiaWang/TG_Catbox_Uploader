@@ -2,7 +2,7 @@ import CatBox from "catbox.moe";
 import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID, CATBOX_TOKEN } from "./index.js";
 import strings from "../strings.js";
 import * as fs from "fs";
-import { bot } from "../../index.js";
+import { bot, BOT_NAME } from "../../index.js";
 import mime from 'mime-types';
 import { log } from "./data.js";
 
@@ -21,7 +21,7 @@ export async function transfer(msg) {
     const service = chatData[chat].service;
     let fileSize, fileExt, fileName = randomString(), filePath, editMsg;
 
-    if (file.className === 'Photo') {
+    if (typeof file.className !== 'undefined' && file.className === 'Photo') {
         fileSize = file.sizes[file.sizes.length - 1].sizes.pop();
         fileExt = 'jpg';
     } else {
@@ -96,13 +96,33 @@ export async function transfer(msg) {
             result = await Litterbox.upload(filePath, chatData[chat].lbe);
         // If the result contains a link, which indicates upload was successful
         if (result && result.startsWith('https://')) {
-            await bot.sendMessage(chat, {
-                message: strings[lang]["uploaded"]
-                    .replace('{1}', service)
-                    .replace('{2}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat]["lbe"] + ` ${strings[lang]["hour"]}`))
-                    .replace('{3}', result),
-                replyTo: msg.id
-            });
+            let text = strings[lang]["uploaded"]
+                .replace('{1}', service)
+                .replace('{2}', (fileSize / 1000 / 1000).toFixed(2))
+                .replace('{3}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat]["lbe"] + ` ${strings[lang]["hour"]}`))
+                .replace('{4}', result)
+                .replace('{5}', BOT_NAME);
+            try {
+                await bot.sendMessage(chat, {
+                    message: text,
+                    replyTo: msg.id,
+                    parseMode: 'html'
+                });
+            }
+            // If send message fails, try to reconnect and send again
+            catch (e) {
+                try {
+                    await bot.connect().catch();
+                    await bot.sendMessage(chat, {
+                        message: text,
+                        parseMode: 'html'
+                    });
+                }
+                catch (e) {
+                    await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}` }).catch(() => null);
+                    log(`Download ${fileName} completed, but send message failed: ${e.message}`);
+                }
+            }
             chatData[chat].total++;
             log(`Uploaded ${filePath} to ${service}`);
         }
@@ -115,15 +135,17 @@ export async function transfer(msg) {
             let log = await bot.forwardMessages(LOG_CHANNEL_ID, {
                 messages: msg.id,
                 fromPeer: chat
-            }).catch(console.error);
-            await bot.sendMessage(LOG_CHANNEL_ID, {
-                message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``,
-                replyTo: log[0].id
-            });
+            }).catch(() => null);
+            if (log) {
+                await bot.sendMessage(LOG_CHANNEL_ID, {
+                    message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``,
+                    replyTo: log[0].id
+                });
+            }
         }
     }
     catch (e) {
-        log(`Upload ${filePath} failed: ${e.message}`);
+        log(`Upload ${filePath} failed: ${e.stack}`);
         await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}`, replyTo: msg.id });
     }
     finally {

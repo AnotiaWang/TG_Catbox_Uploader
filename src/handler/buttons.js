@@ -20,10 +20,11 @@ const setService = (chat) => {
 // The main menu of settings
 const mainSettings = (chat) => {
     const lang = chatData[chat].lang;
+    const hour = chatData[chat]["lbe"] === 1 ? strings[lang]["hour"] : strings[lang]["hours"];
     return [[
         cb(strings[lang]["settings_setLang"] + ` (${strings[lang]["name"]})`, 'setLang')], [
         cb(strings[lang]["settings_setService"] + ` (${chatData[chat]["service"]})`, 'setService')], [
-        cb(strings[lang]["settings_setExpr"] + ` (${chatData[chat]["lbe"]} ${strings[lang]["hour"]})`, 'setLBE')], [
+        cb(strings[lang]["settings_setExpr"] + ` (${chatData[chat]["lbe"]} ${hour})`, 'setLBE')], [
         cb(strings[lang]["token"], 'setToken')
     ]];
 }
@@ -46,13 +47,14 @@ const setLanguage = (lang) => {
 
 const setLitterBoxExpiration = (lang, chat) => {
     const hour = strings[lang]["hour"];
-    let t = (current) => chatData[chat]["lbe"] === current ? ' ✅' : '';
+    const hours = strings[lang]["hours"];
+    let tick = (current) => chatData[chat]["lbe"] === current ? ' ✅' : '';
     return [[
-        cb(`1 ${hour}${t(1)}`, 'setLBE_1'),
-        cb(`12 ${hour}${t(12)}`, 'setLBE_12')
+        cb(`1 ${hour}${tick(1)}`, 'setLBE_1'),
+        cb(`12 ${hours}${tick(12)}`, 'setLBE_12')
     ], [
-        cb(`24 ${hour}${t(24)}`, 'setLBE_24'),
-        cb(`72 ${hour}${t(72)}`, 'setLBE_72')
+        cb(`24 ${hours}${tick(24)}`, 'setLBE_24'),
+        cb(`72 ${hours}${tick(72)}`, 'setLBE_72')
     ], back(lang)[0]];
 }
 
