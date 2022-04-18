@@ -4,22 +4,22 @@ import strings from "../strings.js";
 import * as fs from "fs";
 import { bot } from "../../index.js";
 import mime from 'mime-types';
-import { ADMIN_ID } from "./data.js";
+import { log } from "./data.js";
 
 export async function transfer(msg) {
-    let chat = parseInt(msg.peerId.userId.value);
-    let lang = chatData[chat].lang;
+    const chat = parseInt(msg.peerId.userId.value);
+    const lang = chatData[chat].lang;
 
     if (chatData[chat].banned)
         return bot.sendMessage(chat, { message: strings[lang]["error_banned"] });
     else if (chatData[chat].downloading >= MAX_DOWNLOADING)
         return bot.sendMessage(chat, { message: strings[lang]["flood_protection"].replace('{s}', MAX_DOWNLOADING) });
 
-    let Catbox = new CatBox.Catbox(chatData[chat].token || CATBOX_TOKEN || undefined);
-    let Litterbox = new CatBox.Litterbox();
-    let file = msg.media.document || msg.media.photo;
-    let fileSize, fileExt, fileName = randomString(), filePath;
-    let service = chatData[chat].service, editMsg;
+    const Catbox = new CatBox.Catbox(chatData[chat].token || CATBOX_TOKEN || '');
+    const Litterbox = new CatBox.Litterbox();
+    const file = msg.media.document || msg.media.photo;
+    const service = chatData[chat].service;
+    let fileSize, fileExt, fileName = randomString(), filePath, editMsg;
 
     if (file.className === 'Photo') {
         fileSize = file.sizes[file.sizes.length - 1].sizes.pop();
@@ -85,7 +85,7 @@ export async function transfer(msg) {
     }
     catch (e) {
         await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}`, replyTo: msg.id }).catch(() => { });
-        log(`Download ${filePath} failed: ${e.message}`, true);
+        log(`Download ${filePath} failed: ${e.message}`);
     }
     // Upload to Catbox / Litterbox
     try {
@@ -123,7 +123,7 @@ export async function transfer(msg) {
         }
     }
     catch (e) {
-        log(`Upload ${filePath} failed: ${e.message}`, true);
+        log(`Upload ${filePath} failed: ${e.message}`);
         await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}`, replyTo: msg.id });
     }
     finally {
@@ -143,18 +143,6 @@ function randomString(e = 8) {
     for (let i = 0; i < e; i++)
         n += t.charAt(Math.floor(Math.random() * a));
     return n;
-}
-
-/**
- *  log wrapper with timestamp
- *  @param {string} text Log content
- *  @param {boolean} alert If true, send the content to bot owner via Telegram
- */
-function log(text, alert = false) {
-    console.log(new Date().toLocaleString('zh-CN') + ': ' + text);
-    if (alert) {
-        bot.sendMessage(ADMIN_ID, { message: text }).catch(() => { });
-    }
 }
 
 function secToTime(sec) {

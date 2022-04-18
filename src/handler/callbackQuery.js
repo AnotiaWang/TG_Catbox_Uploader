@@ -5,17 +5,17 @@ import { bot } from "../../index.js";
 // Callback query handler
 // I use callback queries in the format of: [callback function]_[argument]
 export async function handleCallbackQuery(event) {
-    let query = event.query;
-    let chat = parseInt(query.userId.value);
-    let data = query.data.toString();
-    let arg = data.includes('_') ? data.slice(data.indexOf("_") + 1) : null;
+    const query = event.query;
+    const chat = parseInt(query.userId.value);
+    const data = query.data.toString();
+    const arg = data.includes('_') ? data.slice(data.indexOf("_") + 1) : null;
+    const lang = chatData[chat].lang;
     initChatData(chat);
-    let lang = chatData[chat].lang;
     // Buttons, Text
     let bt = [], text = '🐱 Blank';
     if (data.startsWith('setLang')) {
         if (arg)
-            chatData[chat].lang = lang = arg;
+            chatData[chat].lang = arg;
         else {
             bt = buttons.setLanguage(lang);
             text = `<b>${strings[lang]["settings_setLang"]}</b>\n\n` + strings[lang]["help_setLang"];

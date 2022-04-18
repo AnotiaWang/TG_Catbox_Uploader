@@ -9,7 +9,7 @@ function cb(text, data) {
 
 // Select a storage service (Catbox / Litterbox)
 const setService = (chat) => {
-    let t = (current) => chatData[chat].service === current ? ' ✅' : '';
+    const t = (current) => chatData[chat].service === current ? ' ✅' : '';
     return [[
         cb(`Catbox${t('Catbox')}`, 'setService_Catbox'),
         cb(`Litterbox${t('Litterbox')}`, 'setService_Litterbox')],
@@ -19,7 +19,7 @@ const setService = (chat) => {
 
 // The main menu of settings
 const mainSettings = (chat) => {
-    let lang = chatData[chat].lang;
+    const lang = chatData[chat].lang;
     return [[
         cb(strings[lang]["settings_setLang"] + ` (${strings[lang]["name"]})`, 'setLang')], [
         cb(strings[lang]["settings_setService"] + ` (${chatData[chat]["service"]})`, 'setService')], [
@@ -45,7 +45,7 @@ const setLanguage = (lang) => {
 }
 
 const setLitterBoxExpiration = (lang, chat) => {
-    let hour = strings[lang]["hour"];
+    const hour = strings[lang]["hour"];
     let t = (current) => chatData[chat]["lbe"] === current ? ' ✅' : '';
     return [[
         cb(`1 ${hour}${t(1)}`, 'setLBE_1'),

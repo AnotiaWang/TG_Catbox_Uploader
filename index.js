@@ -5,6 +5,7 @@ import { handleMessage, handleCallbackQuery, launchBot, loadBotData, BOT_TOKEN, 
 import { LogLevel } from "telegram/extensions/Logger.js";
 import { CallbackQuery } from "telegram/events/CallbackQuery.js";
 import { NewMessage } from "telegram/events/index.js";
+import { log } from "./src/handler/data.js";
 
 const stringSession = new StringSession(existsSync('./data/.session') ? readFileSync('./data/.session', 'utf-8') : "");
 
@@ -17,7 +18,7 @@ await bot.connect();
 loadBotData();
 export const BOT_NAME = (await bot.getMe()).username;
 writeFileSync('./data/.session', bot.session.save());
-console.log('[Bot] Launched successfully.');
+log('Launched successfully.');
 
 bot.setLogLevel(LogLevel.ERROR);
 bot.addEventHandler(handleMessage, new NewMessage({}));

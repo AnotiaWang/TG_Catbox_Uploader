@@ -27,6 +27,11 @@ export const chatDataTemplate = {
     token: ''
 };
 
+// console.log, with date added
+export function log(...text) {
+    console.log(`[${new Date().toISOString()}] [Bot] - ${text.join(' ')}`);
+}
+
 export function initChatData(user) {
     if (!chatData[user]) {
         chatData[user] = Object.assign({}, chatDataTemplate);
@@ -45,7 +50,7 @@ export function saveBotData() {
 }
 
 export function loadBotData() {
-    console.log('[Bot] Loading bot data...');
+    log('Loading bot data...');
     if (!existsSync('./data'))
         mkdirSync('./data');
     if (existsSync('./data/chatsList.json'))
@@ -56,16 +61,16 @@ export function loadBotData() {
             bot.sendMessage(chat, { message: strings[chatData[chat].lang]["error"] }).catch();
         }
     let i18n = readdirSync('./src/i18n');
-    console.log(`[Bot] Loaded data from ${Object.keys(chatData).length} chat(s)`);
-    console.log(`[Bot] Loaded ${i18n.length} language(s) (found ${i18n.join(', ')})`);
+    log(`Loaded data from ${Object.keys(chatData).length} chat(s)`);
+    log(`Loaded ${i18n.length} language(s) (found ${i18n.join(', ')})`);
 }
 
 export function launchBot() {
-    console.log('[Bot] Launching...');
+    log('Launching...');
     if (BOT_TOKEN && API_ID && API_HASH)
-        console.log('[Bot] Login to Telegram...');
+        log('Login to Telegram...');
     else {
-        console.error('[Bot] Please set BOT_TOKEN, API_ID and API_HASH in .env file');
+        console.error('Please set BOT_TOKEN, API_ID and API_HASH in .env file');
         process.exit(1);
     }
 }

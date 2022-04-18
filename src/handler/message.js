@@ -4,21 +4,22 @@ import strings from "../strings.js";
 
 // Message handler
 export async function handleMessage(event) {
-    let msg = event.message;
+    const msg = event.message;
     // Currently, only support private messages
     if (msg.peerId.className !== 'PeerUser') return;
-    let chat = parseInt(msg.peerId.userId.value);
+    const chat = parseInt(msg.peerId.userId.value);
+    const lang = chatData[chat].lang;
     // Check if the user has configured the bot
     initChatData(chat);
-    let lang = chatData[chat].lang;
     if (isCommand(msg.message))
         await handleCommand(msg);
     else if (msg.media)
         await transfer(msg);
-    else
+    else {
         bot.sendMessage(chat, {
             message: strings[lang]["sendMeAFile"]
         }).catch(() => null);
+    }
 }
 
 function isCommand(message) {

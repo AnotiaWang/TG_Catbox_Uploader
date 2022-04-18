@@ -5,15 +5,15 @@ import CatBox from "catbox.moe";
 
 // Bot command handler
 export async function handleCommand(msg) {
-    let text = msg.message, chat = parseInt(msg.peerId.userId.value);
+    const text = msg.message, chat = parseInt(msg.peerId.userId.value);
     let command = text.split(" ")[0].substring(1);
-    let mention = command.split("@")[1];
+    const mention = command.split("@")[1];
     // If the text contains mention, need to check if the mentioned target is the bot
     if (mention && mention !== BOT_NAME)
         return;
     // Split the text into command and arguments
     command = command.split('@')[0];
-    let arg = text.split(" ").slice(1).join(" ");
+    const arg = text.split(" ").slice(1).join(" ");
     // Check if the command is valid
     if (GeneralCommands.prototype.hasOwnProperty(command))
         new GeneralCommands(msg)[command](arg);
@@ -29,7 +29,7 @@ class OwnerCommands {
 
     ban(arg) {
         if (arg) {
-            let user = parseInt(arg);
+            const user = parseInt(arg);
             if (chatData[user]) {
                 chatData[user].banned = true;
                 saveBotData();
@@ -45,7 +45,7 @@ class OwnerCommands {
 
     unban(arg) {
         if (arg) {
-            let user = parseInt(arg);
+            const user = parseInt(arg);
             if (chatData[user]) {
                 chatData[user].banned = false;
                 saveBotData();
@@ -132,18 +132,16 @@ class GeneralCommands {
     async delete(link) {
         if (link) {
             if (chatData[this.chat].token) {
-                let Catbox = new CatBox.Catbox(chatData[this.chat].token);
+                const Catbox = new CatBox.Catbox(chatData[this.chat].token);
                 let result = await Catbox.delete(link), text;
-                {
-                    if (result.includes('successful'))
-                        text = strings[this.lang]["deleteFileSuccess"];
-                    else if (result.includes('doesn\'t exist'))
-                        text = strings[this.lang]["operationFailed"].replace('{s}', strings[this.lang]["fileNotFound"]);
-                    else if (result.includes('didn\'t belong to'))
-                        text = strings[this.lang]["operationFailed"].replace('{s}', strings[this.lang]["fileWrongOwnership"]);
-                    else text = strings[this.lang]["unknownError"];
-                    await bot.sendMessage(this.chat, { message: text });
-                }
+                if (result.includes('successful'))
+                    text = strings[this.lang]["deleteFileSuccess"];
+                else if (result.includes('doesn\'t exist'))
+                    text = strings[this.lang]["operationFailed"].replace('{s}', strings[this.lang]["fileNotFound"]);
+                else if (result.includes('didn\'t belong to'))
+                    text = strings[this.lang]["operationFailed"].replace('{s}', strings[this.lang]["fileWrongOwnership"]);
+                else text = strings[this.lang]["unknownError"];
+                await bot.sendMessage(this.chat, { message: text });
             } else await bot.sendMessage(this.chat, {
                 message: strings[this.lang]["err_TokenNeeded"],
                 parseMode: 'html',
@@ -152,19 +150,20 @@ class GeneralCommands {
         } else await bot.sendMessage(this.chat, {
             message: strings[this.lang]["help_delete"],
             parseMode: 'html'
-        })
+        });
     }
 
     async token(token) {
         if (token) {
             chatData[this.chat].token = token;
             await bot.sendMessage(this.chat, { message: strings[this.lang]["setSuccess"] });
-        } else
+        } else {
             await bot.sendMessage(this.chat, {
                 message: strings[this.lang]["help_token"].replace('{t}', chatData[this.chat].token || '🚫'),
                 parseMode: 'html',
                 linkPreview: false
             });
+        }
     }
 }
 
