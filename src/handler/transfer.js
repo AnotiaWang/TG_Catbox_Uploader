@@ -82,13 +82,7 @@ export async function transfer(msg) {
         });
         log(`Downloaded: ${filePath} (Size ${fileSize})`);
         await bot.editMessage(chat, { message: editMsg.id, text: strings[lang]["uploading"].replace('{s}', service) }).catch(() => { });
-    }
-    catch (e) {
-        await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}`, replyTo: msg.id }).catch(() => { });
-        log(`Download ${filePath} failed: ${e.message}`);
-    }
-    // Upload to Catbox / Litterbox
-    try {
+        // Upload to Catbox / Litterbox
         let result;
         if (service.toLowerCase() === 'catbox') {
             result = await Catbox.upload(filePath);
@@ -145,8 +139,8 @@ export async function transfer(msg) {
         }
     }
     catch (e) {
-        log(`Upload ${filePath} failed: ${e.stack}`);
-        await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}`, replyTo: msg.id });
+        await bot.sendMessage(chat, { message: strings[lang]["error"] + `\n\nError info: ${e.message}`, replyTo: msg.id }).catch(() => { });
+        log(`Download ${filePath} failed: ${e.message}`);
     }
     finally {
         if (fs.existsSync(filePath))
