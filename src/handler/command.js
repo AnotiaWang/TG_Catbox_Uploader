@@ -1,5 +1,5 @@
 import strings from "../strings.js";
-import { chatData, ADMIN_ID, buttons, initChatData, saveBotData } from "./index.js";
+import { chatData, ADMIN_ID, buttons, saveBotData } from "./index.js";
 import { bot, BOT_NAME } from "../../index.js";
 import CatBox from "catbox.moe";
 
@@ -35,12 +35,14 @@ class OwnerCommands {
                 saveBotData();
                 bot.sendMessage(this.chat, { message: strings[this.lang]["banned"] })
                     .catch(console.error);
-            } else
-                bot.sendMessage(this.chat, { message: strings[this.lang]["userNotFound"] })
+            } else {
+                bot.sendMessage(this.chat, {message: strings[this.lang]["userNotFound"]})
                     .catch(console.error);
-        } else
-            bot.sendMessage(this.chat, { message: 'Usage: /ban UID' })
+            }
+        } else {
+            bot.sendMessage(this.chat, {message: 'Usage: /ban UID'})
                 .catch(console.error);
+        }
     }
 
     unban(arg) {
@@ -51,12 +53,14 @@ class OwnerCommands {
                 saveBotData();
                 bot.sendMessage(this.chat, { message: strings[this.lang]["unbanned"] })
                     .catch(console.error);
-            } else
-                bot.sendMessage(this.chat, { message: strings[this.lang]["userNotFound"] })
+            } else {
+                bot.sendMessage(this.chat, {message: strings[this.lang]["userNotFound"]})
                     .catch(console.error);
-        } else
-            bot.sendMessage(this.chat, { message: 'Usage: /unban UID' })
+            }
+        } else {
+            bot.sendMessage(this.chat, {message: 'Usage: /unban UID'})
                 .catch(console.error);
+        }
     }
 
     async broadcast(text) {
@@ -114,7 +118,6 @@ class GeneralCommands {
     async stats() {
         let total = 0, downloading = 0;
         for (let chat in chatData) {
-            initChatData(chat);
             downloading += chatData[chat].downloading;
             total += chatData[chat].total;
         }
@@ -125,8 +128,7 @@ class GeneralCommands {
                 .replace('{3}', total)
                 .replace('{4}', chatData[this.chat].total),
             parseMode: 'html',
-        }
-        );
+        });
     }
 
     async delete(link) {
@@ -165,10 +167,6 @@ class GeneralCommands {
             });
         }
     }
-}
-
-export function isGroup(ctx) {
-    return ctx.message.chat.type === 'group' || ctx.message.chat.type === 'supergroup';
 }
 
 function sleep(ms) {
