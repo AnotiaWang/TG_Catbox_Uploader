@@ -19,10 +19,12 @@ export async function transfer(msg) {
     const Litterbox = new CatBox.Litterbox();
     const file = msg.media.document || msg.media.photo;
     const service = chatData[chat].service;
-    let fileSize, fileExt, fileName = randomString(), filePath, editMsg;
+    let fileSize, fileExt, fileName = randomString(), filePath;
 
     if (typeof file.className !== 'undefined' && file.className === 'Photo') {
-        fileSize = file.sizes[file.sizes.length - 1].sizes.pop();
+        if (typeof file.sizes[file.sizes.length - 1].sizes === 'object')
+            fileSize = file.sizes[file.sizes.length - 1].sizes.pop();
+        else fileSize = file.sizes[file.sizes.length - 1].size;
         fileExt = 'jpg';
     } else {
         fileSize = file.size;
@@ -39,8 +41,8 @@ export async function transfer(msg) {
     if ((service === 'Catbox' && fileSize > 200000000) || (service === 'Litterbox' && fileSize > 1000000000))
         return bot.sendMessage(chat, { message: strings[lang]["err_FileTooBig"].replace('{s}', service) });
 
-    editMsg = await bot.sendMessage(chat, { message: strings[lang]["downloading"], replyTo: msg.id });
     chatData[chat].downloading++;
+    const editMsg = await bot.sendMessage(chat, { message: strings[lang]["downloading"], replyTo: msg.id });
 
     if (!fs.existsSync('./cache'))
         fs.mkdirSync('./cache');
