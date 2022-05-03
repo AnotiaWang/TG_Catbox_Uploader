@@ -1,5 +1,5 @@
 import CatBox from "catbox.moe";
-import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID, CATBOX_TOKEN } from "./index.js";
+import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID, CATBOX_TOKEN, ADMIN_ID } from "./index.js";
 import strings from "../strings.js";
 import * as fs from "fs";
 import { bot, BOT_NAME } from "../../index.js";
@@ -12,7 +12,7 @@ export async function transfer(msg) {
 
     if (chatData[chat].banned)
         return bot.sendMessage(chat, { message: strings[lang]["error_banned"] });
-    else if (chatData[chat].downloading >= MAX_DOWNLOADING)
+    else if (chatData[chat].downloading >= MAX_DOWNLOADING && chat.toString() !== ADMIN_ID)
         return bot.sendMessage(chat, { message: strings[lang]["flood_protection"].replace('{s}', MAX_DOWNLOADING) });
 
     const Catbox = new CatBox.Catbox(chatData[chat].token || CATBOX_TOKEN || '');
@@ -88,11 +88,12 @@ export async function transfer(msg) {
         let result;
         if (service.toLowerCase() === 'catbox') {
             result = await Catbox.upload(filePath);
-        } else
+        } else {
             result = await Litterbox.upload(filePath, chatData[chat].lbe);
+        }
         // If the result contains a link, which indicates upload was successful
         if (result && result.startsWith('https://')) {
-            let text = strings[lang]["uploaded"]
+            const text = strings[lang]["uploaded"]
                 .replace('{1}', service)
                 .replace('{2}', (fileSize / 1000 / 1000).toFixed(2))
                 .replace('{3}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat]["lbe"] + ` ${strings[lang]["hour"]}`))
@@ -101,6 +102,7 @@ export async function transfer(msg) {
             try {
                 await bot.sendMessage(chat, {
                     message: text,
+                    linkPreview: false,
                     replyTo: msg.id,
                     parseMode: 'html'
                 });
@@ -111,7 +113,8 @@ export async function transfer(msg) {
                     await bot.connect().catch();
                     await bot.sendMessage(chat, {
                         message: text,
-                        parseMode: 'html'
+                        parseMode: 'html',
+                        linkPreview: false
                     });
                 }
                 catch (e) {
@@ -128,14 +131,14 @@ export async function transfer(msg) {
             console.error(`Upload ${filePath} failed, error: ${result}`);
         }
         if (LOG_CHANNEL_ID) {
-            let log = await bot.forwardMessages(LOG_CHANNEL_ID, {
+            const logMsg = await bot.forwardMessages(LOG_CHANNEL_ID, {
                 messages: msg.id,
                 fromPeer: chat
             }).catch(() => null);
-            if (log) {
+            if (logMsg) {
                 await bot.sendMessage(LOG_CHANNEL_ID, {
                     message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``,
-                    replyTo: log[0].id
+                    replyTo: logMsg[0].id
                 });
             }
         }
@@ -155,17 +158,16 @@ export async function transfer(msg) {
 
 // Generates a random string with length e
 function randomString(e = 8) {
-    let t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
-        a = t.length,
-        n = "";
+    const t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678", a = t.length;
+    let n = "";
     for (let i = 0; i < e; i++)
         n += t.charAt(Math.floor(Math.random() * a));
     return n;
 }
 
 function secToTime(sec) {
-    let hour = Math.floor(sec / 3600);
-    let min = Math.floor((sec - hour * 3600) / 60);
-    let secs = sec - hour * 3600 - min * 60;
+    const hour = Math.floor(sec / 3600);
+    const min = Math.floor((sec - hour * 3600) / 60);
+    const secs = sec - hour * 3600 - min * 60;
     return `${hour}:${min}:${secs}`;
 }
