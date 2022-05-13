@@ -20,9 +20,13 @@ export const BOT_NAME = (await bot.getMe()).username;
 writeFileSync('./data/.session', bot.session.save());
 log('Launched successfully.');
 
-bot.setLogLevel(LogLevel.ERROR);
+bot.setLogLevel(LogLevel.INFO);
 bot.addEventHandler(handleMessage, new NewMessage({}));
 bot.addEventHandler(handleCallbackQuery, new CallbackQuery());
+
+setInterval(async () => {
+    if (!bot.connected) await bot.connect();
+}, 5 * 60 * 1000);
 
 process.on('unhandledRejection', (reason, promise) => {
     console.error(reason, 'Unhandled Rejection at', promise);

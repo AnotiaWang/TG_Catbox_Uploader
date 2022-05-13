@@ -11,6 +11,7 @@ export async function handleMessage(event) {
     // Currently, only support private messages
     if (msg.peerId.className !== 'PeerUser') return;
     const lang = chatData[chatId].lang;
+    if (!bot.connected) await bot.connect();
     if (isCommand(msg.message))
         await handleCommand(msg);
     else if (msg.media)
