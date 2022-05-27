@@ -9,14 +9,14 @@ export async function handleCallbackQuery(event) {
     const chat = parseInt(query.userId.value);
     const data = query.data.toString();
     const arg = data.includes('_') ? data.slice(data.indexOf("_") + 1) : null;
-    const lang = chatData[chat].lang;
+    let lang = chatData[chat].lang;
     initChatData(chat);
     if (!bot.connected) await bot.connect();
     // Buttons, Text
     let bt = [], text = '🐱 Blank';
     if (data.startsWith('setLang')) {
         if (arg)
-            chatData[chat].lang = arg;
+            chatData[chat].lang = lang = arg;
         else {
             bt = buttons.setLanguage(lang);
             text = `<b>${strings[lang]["settings_setLang"]}</b>\n\n` + strings[lang]["help_setLang"];

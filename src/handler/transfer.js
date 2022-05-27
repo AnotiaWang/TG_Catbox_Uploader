@@ -93,10 +93,12 @@ export async function transfer(msg) {
         }
         // If the result contains a link, which indicates upload was successful
         if (result && result.startsWith('https://')) {
+            const validity = chatData[chat]["lbe"];
+            const hour = (validity === 1 ? strings[lang]["hour"] : strings[lang]["hours"]);
             const text = strings[lang]["uploaded"]
                 .replace('{1}', service)
                 .replace('{2}', (fileSize / 1000 / 1000).toFixed(2))
-                .replace('{3}', service.toLowerCase() === 'catbox' ? '∞' : (chatData[chat]["lbe"] + ` ${strings[lang]["hour"]}`))
+                .replace('{3}', service.toLowerCase() === 'catbox' ? '∞' : `${validity} ${hour}`)
                 .replace('{4}', result)
                 .replace('{5}', BOT_NAME);
             try {
