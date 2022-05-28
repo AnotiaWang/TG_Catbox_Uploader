@@ -15,9 +15,9 @@ export async function handleCommand(msg) {
     command = command.split('@')[0];
     const arg = text.split(" ").slice(1).join(" ");
     // Check if the command is valid
-    if (GeneralCommands.prototype.hasOwnProperty(command))
+    if (Object.prototype.hasOwnProperty.call(GeneralCommands.prototype, command))
         new GeneralCommands(msg)[command](arg);
-    else if (OwnerCommands.prototype.hasOwnProperty(command) && chat.toString() === ADMIN_ID)
+    else if (Object.prototype.hasOwnProperty.call(OwnerCommands.prototype, command) && chat.toString() === ADMIN_ID)
         new OwnerCommands(msg)[command](arg);
 }
 
