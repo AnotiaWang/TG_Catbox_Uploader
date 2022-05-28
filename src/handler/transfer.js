@@ -83,8 +83,7 @@ export async function transfer(msg) {
         log(`Downloaded: ${filePath} (Size ${fileSize})`);
         await bot.editMessage(chat, { message: editMsg.id, text: strings[lang]["uploading"].replace('{s}', service) }).catch(() => { });
         // Upload to Catbox / Litterbox
-        let result;
-        result = await (service.toLowerCase() === 'catbox' ? Catbox.upload(filePath) : Litterbox.upload(filePath, chatData[chat].lbe));
+        const result = await (service.toLowerCase() === 'catbox' ? Catbox.upload(filePath) : Litterbox.upload(filePath, chatData[chat].lbe));
         // If the result contains a link, which indicates upload was successful
         if (result && result.startsWith('https://')) {
             const validity = chatData[chat]["lbe"];
