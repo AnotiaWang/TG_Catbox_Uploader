@@ -22,9 +22,7 @@ export async function transfer(msg) {
     let fileSize, fileExt, fileName = randomString(), filePath;
 
     if (typeof file.className !== 'undefined' && file.className === 'Photo') {
-        if (typeof file.sizes[file.sizes.length - 1].sizes === 'object')
-            fileSize = file.sizes[file.sizes.length - 1].sizes.pop();
-        else fileSize = file.sizes[file.sizes.length - 1].size;
+        fileSize = typeof file.sizes[file.sizes.length - 1].sizes === 'object' ? file.sizes[file.sizes.length - 1].sizes.pop() : file.sizes[file.sizes.length - 1].size;
         fileExt = 'jpg';
     } else {
         fileSize = file.size;
@@ -86,11 +84,7 @@ export async function transfer(msg) {
         await bot.editMessage(chat, { message: editMsg.id, text: strings[lang]["uploading"].replace('{s}', service) }).catch(() => { });
         // Upload to Catbox / Litterbox
         let result;
-        if (service.toLowerCase() === 'catbox') {
-            result = await Catbox.upload(filePath);
-        } else {
-            result = await Litterbox.upload(filePath, chatData[chat].lbe);
-        }
+        result = await (service.toLowerCase() === 'catbox' ? Catbox.upload(filePath) : Litterbox.upload(filePath, chatData[chat].lbe));
         // If the result contains a link, which indicates upload was successful
         if (result && result.startsWith('https://')) {
             const validity = chatData[chat]["lbe"];
