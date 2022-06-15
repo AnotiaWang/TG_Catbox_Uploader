@@ -26,7 +26,8 @@ export async function transfer(msg) {
             fileSize = file.sizes[file.sizes.length - 1].sizes.pop();
         else fileSize = file.sizes[file.sizes.length - 1].size;
         fileExt = 'jpg';
-    } else {
+    }
+    else {
         fileSize = file.size;
         if (file.mimeType === 'application/x-tgsticker') {
             fileExt = 'tgs';
@@ -35,7 +36,8 @@ export async function transfer(msg) {
                 parseMode: 'html',
                 linkPreview: false
             });
-        } else fileExt = mime.extension(file.mimeType);
+        }
+        else fileExt = mime.extension(file.mimeType);
     }
 
     if ((service === 'Catbox' && fileSize > 200000000) || (service === 'Litterbox' && fileSize > 1000000000))
@@ -59,7 +61,7 @@ export async function transfer(msg) {
         await bot.downloadMedia(msg, {
             outputFile: filePath,
             progressCallback: (downloaded, total) => {
-                // Limit the edit time interval to 2000 ms
+                // Limit the edit time interval to 3000 ms
                 if (downloaded && Date.now() - lastEditTime > 3000) {
                     // Convert to MB
                     downloaded = (downloaded / 1000 / 1000).toFixed(2);
@@ -82,13 +84,16 @@ export async function transfer(msg) {
                 }
             }
         });
+
         log(`Downloaded: ${filePath} (Size ${fileSize})`);
         await bot.editMessage(chat, { message: editMsg.id, text: strings[lang]["uploading"].replace('{s}', service) }).catch(() => { });
+
         // Upload to Catbox / Litterbox
         let result;
         if (service.toLowerCase() === 'catbox') {
             result = await Catbox.upload(filePath);
-        } else {
+        }
+        else {
             result = await Litterbox.upload(filePath, chatData[chat].lbe);
         }
         // If the result contains a link, which indicates upload was successful

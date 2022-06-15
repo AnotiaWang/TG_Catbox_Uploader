@@ -10,7 +10,11 @@ import { log } from "./src/handler/data.js";
 const stringSession = new StringSession(existsSync('./data/.session') ? readFileSync('./data/.session', 'utf-8') : "");
 
 launchBot();
-export const bot = new TelegramClient(stringSession, parseInt(API_ID), API_HASH, {connectionRetries: 3});
+export const bot = new TelegramClient(stringSession, parseInt(API_ID), API_HASH, {
+    connectionRetries: 5,
+    useWSS: false,
+    autoReconnect: true
+});
 await bot.start({
     botAuthToken: BOT_TOKEN
 });
