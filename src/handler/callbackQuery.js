@@ -11,7 +11,7 @@ export async function handleCallbackQuery(event) {
     const arg = data.includes('_') ? data.slice(data.indexOf("_") + 1) : null;
     let lang = chatData[chat].lang;
     initChatData(chat);
-    if (!bot.connected) await bot.connect();
+
     // Buttons, Text
     let bt = [], text = '🐱 Blank';
     if (data.startsWith('setLang')) {

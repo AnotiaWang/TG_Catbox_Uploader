@@ -117,7 +117,6 @@ export async function transfer(msg) {
             // If send message fails, try to reconnect and send again
             catch (e) {
                 try {
-                    await bot.connect().catch();
                     await bot.sendMessage(chat, {
                         message: text,
                         parseMode: 'html',
