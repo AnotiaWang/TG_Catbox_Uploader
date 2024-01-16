@@ -1,11 +1,11 @@
 {
   "name": "tg_catboxuploader",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A simple Telegram bot to upload files to catbox.moe",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "npx -y tsx index.ts"
   },
   "keywords": [
     "telegram",
@@ -16,9 +16,13 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "catbox.moe": "^1.0.2",
     "dotenv": "^16.0.0",
     "mime-types": "^2.1.34",
+    "node-catbox": "^3.0.1",
     "telegram": "^2.9.8"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^2.1.4",
+    "@types/node": "^20.11.3"
   }
 }

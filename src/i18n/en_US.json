@@ -32,6 +32,7 @@
     "stats": "<b>📊 Stats</b>\n\nTotal users: {1}\nTransfers in progress: {2}\nTotal transfers: {3}\nYour transfers: {4}",
     "error_banned": "You are banned from using this bot.",
     "error_outOfMemory": "The server is out of memory now. Please try again later.",
+    "error_unsupportedFileType": "Unsupported file type.",
     "banned": "User is now banned from using this bot.",
     "unbanned": "User is now unbanned.",
     "userNotFound": "User not found.",
