@@ -31,7 +31,8 @@
 - Run the following command: (Node.js environment required)
 
 ```Bash
-npm install && npm start
+# Required pnpm
+pnpm install && pnpm start
 ```
 
 ## Variables

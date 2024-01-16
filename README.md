@@ -33,7 +33,8 @@
 - 运行以下命令（需有 Node.js 环境）：
 
 ```Bash
-npm install && npm start
+# 需要先安装 pnpm
+pnpm install && pnpm start
 ```
 
 ## 环境变量
