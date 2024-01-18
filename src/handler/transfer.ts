@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import strings from '../strings.js'
 import mime from 'mime-types'
+import bigInt from 'big-integer'
 import { log } from './data.js'
 import { bot, BOT_NAME } from '../../index.js'
 import { Catbox, Litterbox } from 'node-catbox'
@@ -86,18 +87,37 @@ export async function transfer(msg: Api.Message) {
   log(`Start downloading: ${filePath} (Size ${fileSize})...`)
 
   try {
-    const downloader = bot.iterDownload({
-      file: msg.media,
-      requestSize: 4096 * 1024,
-    })
     // The last time when the message is edited, in UNIX timestamp format
     let lastEditTime = Date.now()
     let lastDownloadSize = 0
     let downloadedBytes = 0
+    const chunkSize = 4096 * 1024 // 4 MB
+    const totalChunks = Math.ceil(fileSize / chunkSize)
+    let downloadedChunks = 0
 
-    for await (const chunk of downloader) {
-      fs.appendFileSync(filePath, chunk, { encoding: 'binary' })
-      downloadedBytes += chunk.length
+    while (downloadedChunks < totalChunks) {
+      let chunksToDownload = 5
+      if (downloadedChunks + chunksToDownload > totalChunks) {
+        chunksToDownload = totalChunks - downloadedChunks
+      }
+      const chunks = await Promise.all(
+        Array.from({ length: chunksToDownload }, (_, i) => {
+          return bot
+            .iterDownload({
+              file: msg.media,
+              requestSize: chunkSize,
+              offset: bigInt(chunkSize * i + downloadedChunks * chunkSize),
+              limit: 1,
+              dcId: 5,
+            })
+            .collect()
+        }),
+      )
+      chunks.forEach(chunk => {
+        fs.appendFileSync(filePath, chunk[0] as Buffer, { encoding: 'binary' })
+        downloadedBytes += (chunk[0] as Buffer).length
+      })
+      downloadedChunks += chunksToDownload
 
       // Update the progress message every 3 seconds
       if (downloadedBytes && Date.now() - lastEditTime > 3000) {
@@ -201,7 +221,7 @@ export async function transfer(msg: Api.Message) {
         replyTo: msg.id,
       })
       .catch(() => {})
-    log(`Download ${filePath} failed: ${e.message}`)
+    log(`Download ${filePath} failed: ${e.stack}`)
   } finally {
     if (fs.existsSync(filePath)) fs.rmSync(filePath)
     chatData[chat].downloading--
