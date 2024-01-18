@@ -2,7 +2,7 @@
     "name": "简体中文",
     "help": "🐱 <b>欢迎使用 Catbox Uploader！</b>\n\n本机器人可以将您发送的文件上传到 <a href=\"https://catbox.moe\">Catbox</a> 或 <a href=\"https://litterbox.catbox.moe\">Litterbox</a>，并返回文件的分享链接。\n上传的文件不得违反 <a href=\"https://catbox.moe/faq.php\">Catbox ToS</a> 以及 Litterbox ToS。\n\n命令列表：\n/help - 显示帮助信息\n/settings - 设置语言、存储服务、文件有效时长\n/delete - 删除上传到 Catbox 的文件\n/token - 绑定 Catbox 令牌（设置中同样可见）\n\n网络资源分享频道： @atashare\nBot 更新频道：@atabots\nBot 源码：<a href=\"https://github.com/AnotiaWang/TG_Catbox_Uploader\">GitHub</a>",
     "downloading": "正在下载文件...",
-    "downloadProgress": "<b>📥 下载中</b>\n\n<b>文件大小：</b>{1} MB\n<b>已下载：</b>{2} MB\n<b>速度：</b>{3} MB/s\n<b>剩余时间：</b>{4}",
+    "downloadProgress": "<b>📥 下载中</b>\n\n<b>文件大小：</b>{1} MB\n<b>已下载：</b>{2} MB\n<b>速度：</b>{3} MB/s\n<b>剩余时间：</b><code>{4}</code>",
     "uploading": "正在上传至 {s}...",
     "uploaded": "<b>✅ 上传完成！</b>\n\n☁ 存储服务：{1}\n🗂️ 文件大小：{2} MB\n⏲️ 有效期：{3}\n📎 链接：{4}\n\n<i>🤖 By @{5}</i>",
     "error": "😥 传输失败！或许是服务器目前负载过大或网络连接不畅，请稍后再试。",

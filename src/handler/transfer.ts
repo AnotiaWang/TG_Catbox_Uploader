@@ -102,16 +102,17 @@ export async function transfer(msg: Api.Message) {
       // Update the progress message every 3 seconds
       if (downloadedBytes && Date.now() - lastEditTime > 3000) {
         // Convert to MB
-        let downloaded = +(downloadedBytes / 1000 / 1000).toFixed(2)
-        let total = +(fileSize / 1000 / 1000).toFixed(2)
-        let speed = +((downloaded - lastDownloadSize) / 3).toFixed(2)
-        let text = strings[lang]['downloadProgress']
-          .replace('{1}', total.toString())
-          .replace('{2}', downloaded.toString())
-          .replace('{3}', speed.toString())
-          .replace('{4}', secToTime(Math.round((total - downloaded) / speed)))
-        let percent = Math.round((downloaded / total) * 100)
-        text += `\n\n<code>[${'●'.repeat(percent / 5.5)}${'○'.repeat(18 - percent / 5.5)}]</code>`
+        const downloaded = +(downloadedBytes / 1000 / 1000).toFixed(2)
+        const total = +(fileSize / 1000 / 1000).toFixed(2)
+        const speed = +((downloaded - lastDownloadSize) / 3).toFixed(2)
+        const percent = Math.round((downloaded / total) * 100)
+        const text =
+          strings[lang]['downloadProgress']
+            .replace('{1}', total.toString())
+            .replace('{2}', downloaded.toString())
+            .replace('{3}', speed.toString())
+            .replace('{4}', secToTime(Math.round((total - downloaded) / speed))) +
+          `\n\n<code>[${'●'.repeat(percent / 5.5)}${'○'.repeat(18 - percent / 5.5)}]</code>`
         lastEditTime = Date.now()
         lastDownloadSize = downloaded
 
@@ -223,5 +224,9 @@ function secToTime(sec: number) {
   const min = Math.floor((sec - hour * 3600) / 60)
   const secs = sec - hour * 3600 - min * 60
 
-  return `${hour}:${min}:${secs}`
+  return [
+    hour.toString().padStart(2, '0'),
+    min.toString().padStart(2, '0'),
+    secs.toString().padStart(2, '0'),
+  ].join(':')
 }
