@@ -131,12 +131,13 @@ export async function transfer(msg: Api.Message) {
       })
       downloadedChunks += chunksToDownload
 
+      const now = Date.now()
       // Update the progress message every 3 seconds
-      if (downloadedBytes && Date.now() - lastEditTime > 3000) {
+      if (downloadedBytes && now - lastEditTime > 3000) {
         // Convert to MB
         const downloaded = +(downloadedBytes / 1000 / 1000).toFixed(2)
         const total = +(fileSize / 1000 / 1000).toFixed(2)
-        const speed = +((downloaded - lastDownloadSize) / 3).toFixed(2)
+        const speed = +((downloaded - lastDownloadSize) / ((now - lastEditTime) / 1000)).toFixed(2)
         const percent = Math.round((downloaded / total) * 100)
         const text =
           strings[lang]['downloadProgress']
@@ -145,7 +146,7 @@ export async function transfer(msg: Api.Message) {
             .replace('{3}', speed.toString())
             .replace('{4}', secToTime(Math.round((total - downloaded) / speed))) +
           `\n\n<code>[${'●'.repeat(percent / 5.5)}${'○'.repeat(18 - percent / 5.5)}]</code>`
-        lastEditTime = Date.now()
+        lastEditTime = now
         lastDownloadSize = downloaded
 
         bot
