@@ -20,8 +20,6 @@ export async function transfer(msg: Api.Message) {
       message: strings[lang]['flood_protection'].replace('{s}', MAX_DOWNLOADING),
     })
 
-  // const Catbox = new CatBox.Catbox(chatData[chat].token || CATBOX_TOKEN || '')
-  // const Litterbox = new CatBox.Litterbox()
   let file: Api.TypeDocument | Api.TypePhoto | Api.TypeWebDocument
   if (
     'document' in msg.media &&
@@ -30,7 +28,6 @@ export async function transfer(msg: Api.Message) {
   ) {
     file = msg.media.document
   } else if ('photo' in msg.media && msg.media.photo && msg.media.photo.className === 'Photo') {
-    console.log(msg.media.photo)
     file = msg.media.photo
   } else {
     return bot.sendMessage(chat, {
@@ -38,7 +35,6 @@ export async function transfer(msg: Api.Message) {
       replyTo: msg.id,
     })
   }
-  // const file = msg.media.document || msg.media.photo
   const service = chatData[chat].service
   let fileSize: number,
     fileExt: string,
@@ -89,41 +85,45 @@ export async function transfer(msg: Api.Message) {
   filePath = `./cache/${chat}_${fileName}.${fileExt}`
   log(`Start downloading: ${filePath} (Size ${fileSize})...`)
 
-  // The last time when the message is edited, in UNIX timestamp format
-  let lastEditTime = Date.now()
-  let lastDownloadSize = 0
   try {
-    await bot.downloadMedia(msg, {
-      outputFile: filePath,
-      progressCallback: (_downloaded, _total) => {
-        let downloaded = _downloaded.toJSNumber()
-        let total = _total.toJSNumber()
-        // Limit the edit time interval to 3000 ms
-        if (downloaded && Date.now() - lastEditTime > 3000) {
-          // Convert to MB
-          downloaded = +(downloaded / 1000 / 1000).toFixed(2)
-          total = +(total / 1000 / 1000).toFixed(2)
-          let speed = +((downloaded - lastDownloadSize) / 3).toFixed(2)
-          let text = strings[lang]['downloadProgress']
-            .replace('{1}', total)
-            .replace('{2}', downloaded)
-            .replace('{3}', speed)
-            .replace('{4}', secToTime(Math.round((total - downloaded) / speed)))
-          let percent = Math.round((downloaded / total) * 100)
-          text +=
-            '\n\n<code>[' + '●'.repeat(percent / 5.5) + '○'.repeat(18 - percent / 5.5) + ']</code>'
-          lastEditTime = Date.now()
-          lastDownloadSize = downloaded
-          bot
-            .editMessage(chat, {
-              message: editMsg.id,
-              text: text,
-              parseMode: 'html',
-            })
-            .catch(() => {})
-        }
-      },
+    const downloader = bot.iterDownload({
+      file: msg.media,
+      requestSize: 4096 * 1024,
     })
+    // The last time when the message is edited, in UNIX timestamp format
+    let lastEditTime = Date.now()
+    let lastDownloadSize = 0
+    let downloadedBytes = 0
+
+    for await (const chunk of downloader) {
+      fs.appendFileSync(filePath, chunk, { encoding: 'binary' })
+      downloadedBytes += chunk.length
+
+      // Update the progress message every 3 seconds
+      if (downloadedBytes && Date.now() - lastEditTime > 3000) {
+        // Convert to MB
+        let downloaded = +(downloadedBytes / 1000 / 1000).toFixed(2)
+        let total = +(fileSize / 1000 / 1000).toFixed(2)
+        let speed = +((downloaded - lastDownloadSize) / 3).toFixed(2)
+        let text = strings[lang]['downloadProgress']
+          .replace('{1}', total.toString())
+          .replace('{2}', downloaded.toString())
+          .replace('{3}', speed.toString())
+          .replace('{4}', secToTime(Math.round((total - downloaded) / speed)))
+        let percent = Math.round((downloaded / total) * 100)
+        text += `\n\n<code>[${'●'.repeat(percent / 5.5)}${'○'.repeat(18 - percent / 5.5)}]</code>`
+        lastEditTime = Date.now()
+        lastDownloadSize = downloaded
+
+        bot
+          .editMessage(chat, {
+            message: editMsg.id,
+            text: text,
+            parseMode: 'html',
+          })
+          .catch(() => {})
+      }
+    }
 
     log(`Downloaded: ${filePath} (Size ${fileSize})`)
     await bot
@@ -218,9 +218,10 @@ function randomString(e = 8) {
   return n
 }
 
-function secToTime(sec) {
+function secToTime(sec: number) {
   const hour = Math.floor(sec / 3600)
   const min = Math.floor((sec - hour * 3600) / 60)
   const secs = sec - hour * 3600 - min * 60
+
   return `${hour}:${min}:${secs}`
 }
