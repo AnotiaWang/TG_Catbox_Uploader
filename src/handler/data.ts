@@ -1,21 +1,8 @@
-import 'dotenv/config'
-import { writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'fs'
-import { bot } from '../../index.js'
 import strings from '../strings.js'
-import type { LitterboxExpiration, UserData } from '../types/data.js'
-
-export const {
-  DEFAULT_LANG,
-  DEFAULT_SERVICE,
-  DEFAULT_EXPR,
-  ADMIN_ID,
-  MAX_DOWNLOADING,
-  BOT_TOKEN,
-  API_ID,
-  API_HASH,
-  LOG_CHANNEL_ID,
-  CATBOX_TOKEN,
-} = process.env
+import { bot } from '../../index.js'
+import { writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'fs'
+import { DEFAULT_LANG, DEFAULT_SERVICE, DEFAULT_EXPR, BOT_TOKEN, API_ID, API_HASH } from '../env.js'
+import type { UserData } from '../types/data.js'
 
 export let chatData: Record<string, UserData> = {}
 export const chatDataTemplate = {
@@ -23,7 +10,7 @@ export const chatDataTemplate = {
   downloading: 0,
   total: 0,
   service: DEFAULT_SERVICE,
-  lbe: parseInt(DEFAULT_EXPR) as LitterboxExpiration,
+  lbe: DEFAULT_EXPR,
   banned: false,
   token: '',
 }

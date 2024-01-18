@@ -10,5 +10,7 @@ declare namespace NodeJS {
     API_HASH: string
     LOG_CHANNEL_ID: string
     CATBOX_TOKEN: string
+    DOWNLOAD_DC_ID: string
+    DOWNLOAD_WORKERS: string
   }
 }

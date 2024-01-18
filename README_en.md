@@ -4,11 +4,11 @@
 
 <p align="center">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox.moe</a> or <a href="https://litterbox.catbox.moe">Litterbox</a>.</p>
 
------------- 
+---
 
 ## Features
 
-- [x] Upload files (stickers, photos, audios, videos) 
+- [x] Upload files (stickers, photos, audios, videos)
 
 - [x] Use Catbox (max 200 MB per file) and Litterbox (max 1 GB per file) as storage
 
@@ -45,7 +45,7 @@ pnpm install && pnpm start
 
 - `ADMIN_ID`: Admin ID (Usually yours. Get it from [GetIDs Bot](https://t.me/getidsbot)).
 
-- `LOG_CHANNEL_ID`: Channel to store logs. Can be left empty. *This is only needed to check if files violated the ToS*.
+- `LOG_CHANNEL_ID`: Channel to store logs. Can be left empty. _This is only needed to check if files violated the ToS_.
 
 - `DEFAULT_LANG`: [ `zh_CN` / `en_US` ] Default language for your users.
 
@@ -59,6 +59,10 @@ pnpm install && pnpm start
 
 - `WEBHOOK_URL`: [ Optional ] Webhook URL. If not specified, bot will use polling as default. The port that express.js listens can be changed in the code. You may use a reverse proxy to make it work.
 
+- `DOWNLOAD_DC_ID`: [ Optional ] [Telegram DC](https://docs.pyrogram.org/faq/what-are-the-ip-addresses-of-telegram-data-centers) ID for downloading files. The default value written in the code is `5`. Changing this to your bot's DC ID may improve the download speed.
+
+- `DOWNLOAD_WORKERS`: [ Optional ] Number of parallel chunk downloads. The default value written in the code is `5`. Increasing this value may improve the download speed, but may cause unknown problems.
+
 ## Demo
 
 👉👉 [Catbox Uploader Bot](https://t.me/CatboxUploaderBot) 👈👈
@@ -71,7 +75,7 @@ pnpm install && pnpm start
 
 3. Edit the file, and add your translation, according to `zh_CN.json` (Chinese is my mother tongue, so the expressions may be more accurate. You can also choose other files as the source). All properties in `zh_CN.json` are required.
 
-4. Commit and push your changes. Create a Pull Request. 
+4. Commit and push your changes. Create a Pull Request.
 
 > You can also directly edit the files in Web IDE, and create Pull Request after modifying.
 

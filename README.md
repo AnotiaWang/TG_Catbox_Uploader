@@ -6,7 +6,7 @@
 
 <p align="center">A simple Node.js bot for uploading Telegram files to <a href="https://catbox.moe">Catbox</a> or <a href="https://litterbox.catbox.moe">Litterbox</a>.</p>
 
--------
+---
 
 ## 特性
 
@@ -47,7 +47,7 @@ pnpm install && pnpm start
 
 - `ADMIN_ID`: 机器人拥有者（你本人）的 ID。可从 [GetIDs Bot](https://t.me/getidsbot) 获取。
 
-- `LOG_CHANNEL_ID`: 用于存放记录的频道 ID。*可留空，仅用于回溯确认文件是否违反 ToS*。
+- `LOG_CHANNEL_ID`: 用于存放记录的频道 ID。_可留空，仅用于回溯确认文件是否违反 ToS_。
 
 - `DEFAULT_LANG`: [ `zh_CN` / `en_US` ] 用户的默认语言。
 
@@ -60,6 +60,10 @@ pnpm install && pnpm start
 - `MAX_DOWNLOADING`: 允许用户同时上传文件的数量（建议 `1`）。
 
 - `WEBHOOK_URL`: [ 可选 ] Webhook 的 URL，若留空则默认使用 Polling。Express.js 监听端口可在代码中修改，需设置反代。
+
+- `DONWLOAD_DC_ID`: [ 可选 ] 下载文件时使用的 [Telegram 数据中心](https://docs.pyrogram.org/faq/what-are-the-ip-addresses-of-telegram-data-centers)。代码中默认为 5，修改为您机器人所在的 DC 可提高下载速度。
+
+- `DOWNLOAD_WORKERS`: [ 可选 ] 同时下载文件的分块数。代码中默认为 5，提高此项可提高下载速度，但可能会带来未知问题。
 
 ## Demo
 

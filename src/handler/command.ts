@@ -1,7 +1,9 @@
 import strings from '../strings.js'
-import { chatData, ADMIN_ID, buttons, saveBotData } from './index.js'
+import * as buttons from './buttons.js'
 import { bot, BOT_NAME } from '../../index.js'
 import { Catbox } from 'node-catbox'
+import { chatData, saveBotData } from './data.js'
+import { ADMIN_ID } from '../env.js'
 import type { Api } from 'telegram'
 
 // Bot command handler
@@ -17,7 +19,7 @@ export async function handleCommand(msg: Api.Message) {
   const arg = text.split(' ').slice(1).join(' ')
   // Check if the command is valid
   if (GeneralCommands.prototype.hasOwnProperty(command)) new GeneralCommands(msg)[command](arg)
-  else if (OwnerCommands.prototype.hasOwnProperty(command) && chat.toString() === ADMIN_ID)
+  else if (OwnerCommands.prototype.hasOwnProperty(command) && chat === ADMIN_ID)
     new OwnerCommands(msg)[command](arg)
 }
 

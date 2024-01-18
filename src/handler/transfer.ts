@@ -2,10 +2,17 @@ import * as fs from 'fs'
 import strings from '../strings.js'
 import mime from 'mime-types'
 import bigInt from 'big-integer'
-import { log } from './data.js'
+import { chatData, log } from './data.js'
 import { bot, BOT_NAME } from '../../index.js'
 import { Catbox, Litterbox } from 'node-catbox'
-import { MAX_DOWNLOADING, chatData, LOG_CHANNEL_ID, CATBOX_TOKEN, ADMIN_ID } from './index.js'
+import {
+  MAX_DOWNLOADING,
+  ADMIN_ID,
+  CATBOX_TOKEN,
+  LOG_CHANNEL_ID,
+  DOWNLOAD_DC_ID,
+  DOWNLOAD_WORKERS,
+} from '../env.js'
 import type { Api } from 'telegram'
 
 export async function transfer(msg: Api.Message) {
@@ -16,7 +23,7 @@ export async function transfer(msg: Api.Message) {
 
   if (chatData[chat].banned)
     return bot.sendMessage(chat, { message: strings[lang]['error_banned'] })
-  else if (chatData[chat].downloading >= +MAX_DOWNLOADING && chat.toString() !== ADMIN_ID)
+  else if (chatData[chat].downloading >= MAX_DOWNLOADING && chat !== ADMIN_ID)
     return bot.sendMessage(chat, {
       message: strings[lang]['flood_protection'].replace('{s}', MAX_DOWNLOADING),
     })
@@ -96,10 +103,14 @@ export async function transfer(msg: Api.Message) {
     let downloadedChunks = 0
 
     while (downloadedChunks < totalChunks) {
-      let chunksToDownload = 5
+      if (!bot.connected) await bot.connect()
+
+      let chunksToDownload = DOWNLOAD_WORKERS
+
       if (downloadedChunks + chunksToDownload > totalChunks) {
         chunksToDownload = totalChunks - downloadedChunks
       }
+      // Download the file in chunks
       const chunks = await Promise.all(
         Array.from({ length: chunksToDownload }, (_, i) => {
           return bot
@@ -108,11 +119,12 @@ export async function transfer(msg: Api.Message) {
               requestSize: chunkSize,
               offset: bigInt(chunkSize * i + downloadedChunks * chunkSize),
               limit: 1,
-              dcId: 5,
+              dcId: DOWNLOAD_DC_ID,
             })
             .collect()
         }),
       )
+      // Append the chunks to the file
       chunks.forEach(chunk => {
         fs.appendFileSync(filePath, chunk[0] as Buffer, { encoding: 'binary' })
         downloadedBytes += (chunk[0] as Buffer).length

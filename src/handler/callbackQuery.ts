@@ -1,9 +1,10 @@
 import strings from '../strings.js'
-import { chatData, initChatData, buttons, saveBotData } from './index.js'
 import { bot } from '../../index.js'
 import type { Api } from 'telegram'
 import type { LitterboxExpiration, StorageService } from '../types/data.js'
 import type { CallbackQueryEvent } from 'telegram/events/CallbackQuery.js'
+import * as buttons from './buttons.js'
+import { chatData, initChatData, saveBotData } from './data.js'
 
 // Callback query handler
 // I use callback queries in the format of: [callback function]_[argument]

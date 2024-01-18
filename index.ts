@@ -1,26 +1,20 @@
 import { TelegramClient, type Api } from 'telegram'
 import { StringSession } from 'telegram/sessions/index.js'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
-import {
-  handleMessage,
-  handleCallbackQuery,
-  launchBot,
-  loadBotData,
-  BOT_TOKEN,
-  API_ID,
-  API_HASH,
-} from './src/handler/index.js'
 import { LogLevel } from 'telegram/extensions/Logger.js'
 import { CallbackQuery } from 'telegram/events/CallbackQuery.js'
 import { NewMessage } from 'telegram/events/index.js'
-import { log } from './src/handler/data.js'
+import { launchBot, loadBotData, log } from './src/handler/data.js'
+import { API_ID, API_HASH, BOT_TOKEN } from './src/env.js'
+import { handleCallbackQuery } from './src/handler/callbackQuery.js'
+import { handleMessage } from './src/handler/message.js'
 
 const stringSession = new StringSession(
   existsSync('./data/.session') ? readFileSync('./data/.session', 'utf-8') : '',
 )
 
 launchBot()
-export const bot = new TelegramClient(stringSession, parseInt(API_ID), API_HASH, {
+export const bot = new TelegramClient(stringSession, API_ID, API_HASH, {
   connectionRetries: 5,
   useWSS: false,
   autoReconnect: true,
