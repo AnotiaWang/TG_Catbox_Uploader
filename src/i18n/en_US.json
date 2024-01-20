@@ -33,6 +33,7 @@
     "error_banned": "You are banned from using this bot.",
     "error_outOfMemory": "The server is out of memory now. Please try again later.",
     "error_unsupportedFileType": "Unsupported file type.",
+    "error_downloadTimeout": "Download timeout.",
     "banned": "User is now banned from using this bot.",
     "unbanned": "User is now unbanned.",
     "userNotFound": "User not found.",

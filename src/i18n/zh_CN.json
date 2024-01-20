@@ -33,6 +33,7 @@
     "error_banned": "您已经被禁止使用此机器人。",
     "error_outOfMemory": "服务器目前内存不足，请稍后再试。",
     "error_unsupportedFileType": "不支持的文件类型。",
+    "error_downloadTimeout": "下载超时。",
     "banned": "已封禁此用户。",
     "unbanned": "已解封此用户。",
     "userNotFound": "未找到此用户。",

@@ -82,6 +82,7 @@ export async function transfer(msg: Api.Message) {
     })
 
   chatData[chat].downloading++
+
   const editMsg = await bot.sendMessage(chat, {
     message: strings[lang]['downloading'],
     replyTo: msg.id,
@@ -92,6 +93,9 @@ export async function transfer(msg: Api.Message) {
   while (fs.existsSync(`./cache/${chat}_${fileName}.${fileExt}`)) fileName = randomString()
   filePath = `./cache/${chat}_${fileName}.${fileExt}`
   log(`Start downloading: ${filePath} (Size ${fileSize})...`)
+
+  // Timeout for downloading each group of chunks
+  let dlChunkTimeout: NodeJS.Timeout | undefined = undefined
 
   try {
     // The last time when the message is edited, in UNIX timestamp format
@@ -104,6 +108,10 @@ export async function transfer(msg: Api.Message) {
 
     while (downloadedChunks < totalChunks) {
       if (!bot.connected) await bot.connect()
+
+      dlChunkTimeout = setTimeout(() => {
+        throw new Error(strings[lang]['error_downloadTimeout'])
+      }, 60 * 1000)
 
       let chunksToDownload = DOWNLOAD_WORKERS
 
@@ -124,6 +132,7 @@ export async function transfer(msg: Api.Message) {
             .collect()
         }),
       )
+      clearTimeout(dlChunkTimeout)
       // Append the chunks to the file
       chunks.forEach(chunk => {
         fs.appendFileSync(filePath, chunk[0] as Buffer, { encoding: 'binary' })
@@ -180,7 +189,6 @@ export async function transfer(msg: Api.Message) {
         duration: `${chatData[chat]['lbe']}h` as any,
       })
     }
-    // If the result contains a link, which indicates upload was successful
     const validity = chatData[chat]['lbe']
     const hour = validity === 1 ? strings[lang]['hour'] : strings[lang]['hours']
     const text = strings[lang]['uploaded']
@@ -198,6 +206,7 @@ export async function transfer(msg: Api.Message) {
       })
     } catch (e) {
       // If send message fails, try to reconnect and send again
+      if (!bot.connected) await bot.connect()
       try {
         await bot.sendMessage(chat, {
           message: text,
@@ -221,13 +230,16 @@ export async function transfer(msg: Api.Message) {
         })
         .catch(() => null)
       if (logMsg) {
-        await bot.sendMessage(LOG_CHANNEL_ID, {
-          message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``,
-          replyTo: logMsg[0].id,
-        })
+        await bot
+          .sendMessage(LOG_CHANNEL_ID, {
+            message: `From: \`${chat}\`\nService: ${service}\nResult: \`${result}\``,
+            replyTo: logMsg[0].id,
+          })
+          .catch(() => null)
       }
     }
   } catch (e) {
+    clearTimeout(dlChunkTimeout)
     await bot
       .sendMessage(chat, {
         message: strings[lang]['error'] + `\n\nError info: ${e.message}`,
