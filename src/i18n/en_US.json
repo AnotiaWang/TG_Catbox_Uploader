@@ -13,7 +13,6 @@
     "err_DeleteFileFailed": "Delete file failed! Reason: {r}",
     "err_TokenNeeded": "You need to provide a Catbox token (see <a href='https://catbox.moe/user/manage.php'>here</a>) in order to manage your uploaded files.\n\nUse /token <i>[token]</i> to set.",
     "help_delete": "To delete files you uploaded to Catbox, use the command /delete. The argument should be the URL or short code of your file.\n\nExamples:\n<code>/delete https://files.catbox.moe/blabla.zip</code>\n<code>/delete blabla.zip</code>\n\n<i>Files on Litterbox cannot be deleted. They will leave you naturally.</i>",
-    "reloadSuccess": "✅ Reloaded strings.json & config.json",
     "settings": "<b>⚙ Settings</b>",
     "help_settings": "Tap the buttons below to see description and corresponding options.",
     "settings_setLang": "🌏 Language",

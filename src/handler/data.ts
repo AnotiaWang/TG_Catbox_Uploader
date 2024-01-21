@@ -1,6 +1,6 @@
-import strings from '../strings.js'
+import i18n from '../i18n/index.js'
 import { bot } from '../../index.js'
-import { writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'fs'
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs'
 import { DEFAULT_LANG, DEFAULT_SERVICE, DEFAULT_EXPR, BOT_TOKEN, API_ID, API_HASH } from '../env.js'
 import type { UserData } from '../types/data.js'
 
@@ -47,12 +47,10 @@ export function loadBotData() {
   for (let chat in chatData) {
     if (chatData[chat].downloading) {
       chatData[chat].downloading = 0
-      bot.sendMessage(chat, { message: strings[chatData[chat].lang]['error'] }).catch()
+      bot.sendMessage(chat, { message: i18n.t(chatData[chat].lang, 'error') }).catch()
     }
   }
-  let i18n = readdirSync('./src/i18n')
   log(`Loaded data from ${Object.keys(chatData).length} chat(s)`)
-  log(`Loaded ${i18n.length} language(s) (found ${i18n.join(', ')})`)
 }
 
 export function launchBot() {

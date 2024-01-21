@@ -1,4 +1,4 @@
-import strings from '../strings.js'
+import i18n from '../i18n/index.js'
 import { bot } from '../../index.js'
 import type { Api } from 'telegram'
 import type { LitterboxExpiration, StorageService } from '../types/data.js'
@@ -25,13 +25,13 @@ export async function handleCallbackQuery(event: CallbackQueryEvent) {
     if (arg) chatData[chat].lang = lang = arg
     else {
       bt = buttons.setLanguage(lang)
-      text = `<b>${strings[lang]['settings_setLang']}</b>\n\n` + strings[lang]['help_setLang']
+      text = `<b>${i18n.t(lang, 'settings_setLang')}</b>\n\n` + i18n.t(lang, 'help_setLang')
     }
   } else if (data.startsWith('setService')) {
     if (arg) chatData[chat].service = arg as StorageService
     else {
       bt = buttons.setService(chat)
-      text = `<b>${strings[lang]['settings_setService']}</b>\n\n` + strings[lang]['help_setService']
+      text = `<b>${i18n.t(lang, 'settings_setService')}</b>\n\n` + i18n.t(lang, 'help_setService')
     }
   }
   // Set Litterbox Expiration
@@ -39,19 +39,19 @@ export async function handleCallbackQuery(event: CallbackQueryEvent) {
     if (arg) chatData[chat].lbe = parseInt(arg) as LitterboxExpiration
     else {
       bt = buttons.setLitterBoxExpiration(lang, chat)
-      text = `<b>${strings[lang]['settings_setExpr']}</b>\n\n` + strings[lang]['help_setExpr']
+      text = `<b>${i18n.t(lang, 'settings_setExpr')}</b>\n\n` + i18n.t(lang, 'help_setExpr')
     }
   } else if (data.startsWith('setToken')) {
     if (arg && arg === 'unbind') chatData[chat].token = ''
     text =
-      `<b>${strings[lang]['token']}</b>\n\n` +
-      strings[lang]['help_token'].replace('{t}', chatData[chat].token || '🚫')
+      `<b>${i18n.t(lang, 'token')}</b>\n\n` +
+      i18n.t(lang, 'help_token').replace('{t}', chatData[chat].token || '🚫')
     bt = buttons.setToken(chat)
   }
   saveBotData()
   if (!bt.length) {
     bt = buttons.mainSettings(chat)
-    text = `<b>${strings[lang]['settings']}</b>\n\n` + strings[lang]['help_settings']
+    text = `<b>${i18n.t(lang, 'settings')}</b>\n\n` + i18n.t(lang, 'help_settings')
   }
   bot
     .editMessage(chat, {
@@ -62,5 +62,5 @@ export async function handleCallbackQuery(event: CallbackQueryEvent) {
       buttons: bt,
     })
     .catch()
-  await event.answer({ message: arg ? strings[lang]['setSuccess'] : '' })
+  await event.answer({ message: arg ? i18n.t(lang, 'setSuccess') : '' })
 }

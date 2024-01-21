@@ -13,7 +13,6 @@
     "err_DeleteFailed": "删除文件失败！原因：{e}",
     "err_TokenNeeded": "您需要设置一个 Catbox 令牌，才能管理您自己上传的文件。\n\n您可以在<a href='https://catbox.moe/user/manage.php'>这里</a>获取令牌，然后使用 /token <i>[令牌]</i> 进行绑定。",
     "help_delete": "您可以使用 /delete 命令来删除您上传到 Catbox 的文件。命令的参数为文件上传后的链接，或者文件名。\n\n示例：\n<code>/delete https://files.catbox.moe/blabla.zip</code>\n<code>/delete blabla.zip</code>\n\n<i>上传到 Litterbox 的文件无法被手动删除，它们会自行过期。</i>",
-    "reloadSuccess": "✅ 已重新加载 config.json 和 strings.json",
     "settings": "⚙ 设置",
     "help_settings": "单击下方的按钮查看相关描述及选项。",
     "settings_setLang": "🌏 语言",

@@ -1,5 +1,5 @@
 import * as fs from 'fs'
-import strings from '../strings.js'
+import i18n from '../i18n/index.js'
 import mime from 'mime-types'
 import bigInt from 'big-integer'
 import { chatData, log } from './data.js'
@@ -21,11 +21,10 @@ export async function transfer(msg: Api.Message) {
   const chat = msg.peerId.userId.toJSNumber()
   const lang = chatData[chat].lang
 
-  if (chatData[chat].banned)
-    return bot.sendMessage(chat, { message: strings[lang]['error_banned'] })
+  if (chatData[chat].banned) return bot.sendMessage(chat, { message: i18n.t(lang, 'error_banned') })
   else if (chatData[chat].downloading >= MAX_DOWNLOADING && chat !== ADMIN_ID)
     return bot.sendMessage(chat, {
-      message: strings[lang]['flood_protection'].replace('{s}', MAX_DOWNLOADING),
+      message: i18n.t(lang, 'flood_protection').replace('{s}', MAX_DOWNLOADING),
     })
 
   let file: Api.TypeDocument | Api.TypePhoto | Api.TypeWebDocument
@@ -39,7 +38,7 @@ export async function transfer(msg: Api.Message) {
     file = msg.media.photo
   } else {
     return bot.sendMessage(chat, {
-      message: strings[lang]['error_unsupportedFileType'],
+      message: i18n.t(lang, 'error_unsupportedFileType'),
       replyTo: msg.id,
     })
   }
@@ -56,7 +55,7 @@ export async function transfer(msg: Api.Message) {
     else if ('size' in lastSize) fileSize = lastSize.size
     else {
       return bot.sendMessage(chat, {
-        message: strings[lang]['error_unsupportedFileType'],
+        message: i18n.t(lang, 'error_unsupportedFileType'),
         replyTo: msg.id,
       })
     }
@@ -66,7 +65,7 @@ export async function transfer(msg: Api.Message) {
     if (file.mimeType === 'application/x-tgsticker') {
       fileExt = 'tgs'
       await bot.sendMessage(chat, {
-        message: strings[lang]['animatedStickers'],
+        message: i18n.t(lang, 'animatedStickers'),
         parseMode: 'html',
         linkPreview: false,
       })
@@ -78,13 +77,13 @@ export async function transfer(msg: Api.Message) {
     (service === 'Litterbox' && fileSize > 1000000000)
   )
     return bot.sendMessage(chat, {
-      message: strings[lang]['err_FileTooBig'].replace('{s}', service),
+      message: i18n.t(lang, 'err_FileTooBig').replace('{s}', service),
     })
 
   chatData[chat].downloading++
 
   const editMsg = await bot.sendMessage(chat, {
-    message: strings[lang]['downloading'],
+    message: i18n.t(lang, 'downloading'),
     replyTo: msg.id,
   })
 
@@ -110,7 +109,7 @@ export async function transfer(msg: Api.Message) {
       if (!bot.connected) await bot.connect()
 
       dlChunkTimeout = setTimeout(() => {
-        throw new Error(strings[lang]['error_downloadTimeout'])
+        throw new Error(i18n.t(lang, 'error_downloadTimeout'))
       }, 60 * 1000)
 
       let chunksToDownload = DOWNLOAD_WORKERS
@@ -149,7 +148,8 @@ export async function transfer(msg: Api.Message) {
         const speed = +((downloaded - lastDownloadSize) / ((now - lastEditTime) / 1000)).toFixed(2)
         const percent = Math.round((downloaded / total) * 100)
         const text =
-          strings[lang]['downloadProgress']
+          i18n
+            .t(lang, 'downloadProgress')
             .replace('{1}', total.toString())
             .replace('{2}', downloaded.toString())
             .replace('{3}', speed.toString())
@@ -172,7 +172,7 @@ export async function transfer(msg: Api.Message) {
     await bot
       .editMessage(chat, {
         message: editMsg.id,
-        text: strings[lang]['uploading'].replace('{s}', service),
+        text: i18n.t(lang, 'uploading').replace('{s}', service),
       })
       .catch(() => {})
 
@@ -190,8 +190,9 @@ export async function transfer(msg: Api.Message) {
       })
     }
     const validity = chatData[chat]['lbe']
-    const hour = validity === 1 ? strings[lang]['hour'] : strings[lang]['hours']
-    const text = strings[lang]['uploaded']
+    const hour = validity === 1 ? i18n.t(lang, 'hour') : i18n.t(lang, 'hours')
+    const text = i18n
+      .t(lang, 'uploaded')
       .replace('{1}', service)
       .replace('{2}', (fileSize / 1000 / 1000).toFixed(2))
       .replace('{3}', service.toLowerCase() === 'catbox' ? '∞' : `${validity} ${hour}`)
@@ -215,7 +216,7 @@ export async function transfer(msg: Api.Message) {
         })
       } catch (e) {
         await bot
-          .sendMessage(chat, { message: strings[lang]['error'] + `\n\nError info: ${e.message}` })
+          .sendMessage(chat, { message: i18n.t(lang, 'error') + `\n\nError info: ${e.message}` })
           .catch(() => null)
         log(`Download ${fileName} completed, but send message failed: ${e.message}`)
       }
@@ -242,7 +243,7 @@ export async function transfer(msg: Api.Message) {
     clearTimeout(dlChunkTimeout)
     await bot
       .sendMessage(chat, {
-        message: strings[lang]['error'] + `\n\nError info: ${e.message}`,
+        message: i18n.t(lang, 'error') + `\n\nError info: ${e.message}`,
         replyTo: msg.id,
       })
       .catch(() => {})

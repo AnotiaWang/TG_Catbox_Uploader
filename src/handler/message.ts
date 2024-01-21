@@ -1,4 +1,4 @@
-import strings from '../strings.js'
+import i18n from '../i18n/index.js'
 import { bot } from '../../index.js'
 import { handleCommand } from './command.js'
 import { chatData, initChatData } from './data.js'
@@ -20,7 +20,7 @@ export async function handleMessage(event: NewMessageEvent) {
   else {
     bot
       .sendMessage(chatId, {
-        message: strings[lang]['sendMeAFile'],
+        message: i18n.t(lang, 'sendMeAFile'),
       })
       .catch(() => null)
   }

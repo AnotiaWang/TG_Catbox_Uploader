@@ -1,4 +1,4 @@
-import strings from '../strings.js'
+import i18n from '../i18n/index.js'
 import * as buttons from './buttons.js'
 import { bot, BOT_NAME } from '../../index.js'
 import { Catbox } from 'node-catbox'
@@ -38,10 +38,10 @@ class OwnerCommands {
       if (chatData[user]) {
         chatData[user].banned = true
         saveBotData()
-        bot.sendMessage(this.chat, { message: strings[this.lang]['banned'] }).catch(console.error)
+        bot.sendMessage(this.chat, { message: i18n.t(this.lang, 'banned') }).catch(console.error)
       } else {
         bot
-          .sendMessage(this.chat, { message: strings[this.lang]['userNotFound'] })
+          .sendMessage(this.chat, { message: i18n.t(this.lang, 'userNotFound') })
           .catch(console.error)
       }
     } else {
@@ -55,10 +55,10 @@ class OwnerCommands {
       if (chatData[user]) {
         chatData[user].banned = false
         saveBotData()
-        bot.sendMessage(this.chat, { message: strings[this.lang]['unbanned'] }).catch(console.error)
+        bot.sendMessage(this.chat, { message: i18n.t(this.lang, 'unbanned') }).catch(console.error)
       } else {
         bot
-          .sendMessage(this.chat, { message: strings[this.lang]['userNotFound'] })
+          .sendMessage(this.chat, { message: i18n.t(this.lang, 'userNotFound') })
           .catch(console.error)
       }
     } else {
@@ -117,7 +117,7 @@ class GeneralCommands {
   help() {
     bot
       .sendMessage(this.chat, {
-        message: strings[this.lang]['help'],
+        message: i18n.t(this.lang, 'help'),
         parseMode: 'html',
         linkPreview: false,
       })
@@ -127,7 +127,7 @@ class GeneralCommands {
   settings() {
     bot
       .sendMessage(this.chat, {
-        message: strings[this.lang]['settings'],
+        message: i18n.t(this.lang, 'settings'),
         parseMode: 'html',
         buttons: buttons.mainSettings(this.chat),
       })
@@ -142,7 +142,8 @@ class GeneralCommands {
       total += chatData[chat].total
     }
     await bot.sendMessage(this.chat, {
-      message: strings[this.lang]['stats']
+      message: i18n
+        .t(this.lang, 'settings')
         .replace('{1}', Object.keys(chatData).length)
         .replace('{2}', downloading)
         .replace('{3}', total)
@@ -163,31 +164,29 @@ class GeneralCommands {
 
         try {
           await catbox.deleteFiles({ files: [link] })
-          await bot.sendMessage(this.chat, { message: strings[this.lang]['deleteFileSuccess'] })
+          await bot.sendMessage(this.chat, { message: i18n.t(this.lang, 'deleteFileSuccess') })
         } catch (e) {
           console.error(`Delete file ${link} failed:`, e)
           if (e.message.includes("doesn't exist")) {
-            result = strings[this.lang]['operationFailed'].replace(
-              '{s}',
-              strings[this.lang]['fileNotFound'],
-            )
+            result = i18n
+              .t(this.lang, 'operationFailed')
+              .replace('{s}', i18n.t(this.lang, 'fileNotFound'))
           } else if (e.message.includes("didn't belong to")) {
-            result = strings[this.lang]['operationFailed'].replace(
-              '{s}',
-              strings[this.lang]['fileWrongOwnership'],
-            )
-          } else result = strings[this.lang]['unknownError']
+            result = i18n
+              .t(this.lang, 'operationFailed')
+              .replace('{s}', i18n.t(this.lang, 'fileWrongOwnership'))
+          } else result = i18n.t(this.lang, 'unknownError')
           await bot.sendMessage(this.chat, { message: result })
         }
       } else
         await bot.sendMessage(this.chat, {
-          message: strings[this.lang]['err_TokenNeeded'],
+          message: i18n.t(this.lang, 'err_TokenNeeded'),
           parseMode: 'html',
           linkPreview: false,
         })
     } else
       await bot.sendMessage(this.chat, {
-        message: strings[this.lang]['help_delete'],
+        message: i18n.t(this.lang, 'help_delete'),
         parseMode: 'html',
       })
   }
@@ -195,10 +194,10 @@ class GeneralCommands {
   async token(token: string) {
     if (token) {
       chatData[this.chat].token = token
-      await bot.sendMessage(this.chat, { message: strings[this.lang]['setSuccess'] })
+      await bot.sendMessage(this.chat, { message: i18n.t(this.lang, 'setSuccess') })
     } else {
       await bot.sendMessage(this.chat, {
-        message: strings[this.lang]['help_token'].replace('{t}', chatData[this.chat].token || '🚫'),
+        message: i18n.t(this.lang, 'help_token').replace('{t}', chatData[this.chat].token || '🚫'),
         parseMode: 'html',
         linkPreview: false,
       })

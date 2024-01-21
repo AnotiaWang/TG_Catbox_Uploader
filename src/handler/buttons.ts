@@ -1,4 +1,4 @@
-import strings from '../strings.js'
+import i18n from '../i18n/index.js'
 import { Button } from 'telegram/tl/custom/button.js'
 import { chatData } from './data.js'
 import type { Api } from 'telegram'
@@ -24,13 +24,13 @@ const setService = (chat: string | number) => {
 // The main menu of settings
 const mainSettings = (chat: string | number) => {
   const lang = chatData[chat].lang
-  const hour = chatData[chat]['lbe'] === 1 ? strings[lang]['hour'] : strings[lang]['hours']
+  const hour = chatData[chat]['lbe'] === 1 ? i18n.t(lang, 'hour') : i18n.t(lang, 'hours')
 
   return [
-    [cb(strings[lang]['settings_setLang'] + ` (${strings[lang]['name']})`, 'setLang')],
-    [cb(strings[lang]['settings_setService'] + ` (${chatData[chat]['service']})`, 'setService')],
-    [cb(strings[lang]['settings_setExpr'] + ` (${chatData[chat]['lbe']} ${hour})`, 'setLBE')],
-    [cb(strings[lang]['token'], 'setToken')],
+    [cb(i18n.t(lang, 'settings_setLang') + ` (${i18n.t(lang, 'name')})`, 'setLang')],
+    [cb(i18n.t(lang, 'settings_setService') + ` (${chatData[chat]['service']})`, 'setService')],
+    [cb(i18n.t(lang, 'settings_setExpr') + ` (${chatData[chat]['lbe']} ${hour})`, 'setLBE')],
+    [cb(i18n.t(lang, 'token'), 'setToken')],
   ]
 }
 
@@ -39,8 +39,8 @@ const setLanguage = (lang: string) => {
   const buttons: Api.KeyboardButtonCallback[][] = []
   let tmp: Api.KeyboardButtonCallback[] = []
 
-  for (let i18n in strings) {
-    tmp.push(cb(strings[i18n]['name'] + (lang === i18n ? ' ✅' : ''), `setLang_${i18n}`))
+  for (const _lang of i18n.languages) {
+    tmp.push(cb(i18n.t(_lang, 'name') + (_lang === lang ? ' ✅' : ''), `setLang_${_lang}`))
     if (tmp.length === 2) {
       buttons.push(tmp)
       tmp = []
@@ -52,8 +52,8 @@ const setLanguage = (lang: string) => {
 }
 
 const setLitterBoxExpiration = (lang: string, chat: string | number) => {
-  const hour = strings[lang]['hour']
-  const hours = strings[lang]['hours']
+  const hour = i18n.t(lang, 'hour')
+  const hours = i18n.t(lang, 'hours')
   const tick = (current: number) => (chatData[chat]['lbe'] === current ? ' ✅' : '')
 
   return [
@@ -68,13 +68,13 @@ const setToken = (chat: string | number) => {
   const lang = chatData[chat]['lang']
   const bt = [back(lang)[0]]
 
-  if (chatData[chat]['token']) bt.unshift([cb(strings[lang]['unbindToken'], 'setToken_unbind')])
+  if (chatData[chat]['token']) bt.unshift([cb(i18n.t(lang, 'unbindToken'), 'setToken_unbind')])
   return bt
 }
 
 // Back button
 const back = (lang: string) => {
-  return [[cb(strings[lang]['settings_back'], 'back')]]
+  return [[cb(i18n.t(lang, 'settings_back'), 'back')]]
 }
 
 export { setLanguage, mainSettings, setService, setLitterBoxExpiration, back, setToken }
