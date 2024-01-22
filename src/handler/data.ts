@@ -1,7 +1,15 @@
 import i18n from '../i18n/index.js'
 import { bot } from '../../index.js'
-import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs'
-import { DEFAULT_LANG, DEFAULT_SERVICE, DEFAULT_EXPR, BOT_TOKEN, API_ID, API_HASH } from '../env.js'
+import {
+  writeFileSync,
+  readFileSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  statSync,
+  rmSync,
+} from 'fs'
+import { DEFAULT_LANG, DEFAULT_SERVICE, DEFAULT_EXPR } from '../env.js'
 import type { UserData } from '../types/data.js'
 
 export let chatData: Record<string, UserData> = {}
@@ -44,20 +52,30 @@ export function loadBotData() {
   if (!existsSync('./data')) mkdirSync('./data')
   if (existsSync('./data/chatsList.json'))
     chatData = JSON.parse(readFileSync('./data/chatsList.json', 'utf-8')) || {}
+  log(`Loaded data from ${Object.keys(chatData).length} chat(s)`)
+}
+
+export function cleanupOrphanTransferTasks() {
+  let userCount = 0
+
   for (let chat in chatData) {
     if (chatData[chat].downloading) {
+      userCount++
       chatData[chat].downloading = 0
       bot.sendMessage(chat, { message: i18n.t(chatData[chat].lang, 'error') }).catch()
     }
   }
-  log(`Loaded data from ${Object.keys(chatData).length} chat(s)`)
-}
 
-export function launchBot() {
-  log('Launching...')
-  if (BOT_TOKEN && API_ID && API_HASH) log('Login to Telegram...')
-  else {
-    console.error('Please set BOT_TOKEN, API_ID and API_HASH in .env file')
-    process.exit(1)
-  }
+  // Find cache files that were created before the bot was launched,
+  // and delete them
+  const now = new Date()
+  const orphanFiles = readdirSync('./cache', 'utf-8').filter(filename => {
+    const stat = statSync(`./cache/${filename}`)
+    return stat.isFile() && stat.birthtime < now
+  })
+  orphanFiles.forEach(filename => {
+    rmSync(`./cache/${filename}`)
+  })
+
+  log(`Aborted ${userCount} transfer(s) and deleted ${orphanFiles.length} orphan cache file(s)`)
 }
