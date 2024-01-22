@@ -142,12 +142,12 @@ class GeneralCommands {
       total += chatData[chat].total
     }
     await bot.sendMessage(this.chat, {
-      message: i18n
-        .t(this.lang, 'settings')
-        .replace('{1}', Object.keys(chatData).length)
-        .replace('{2}', downloading)
-        .replace('{3}', total)
-        .replace('{4}', chatData[this.chat].total),
+      message: i18n.t(this.lang, 'settings', [
+        Object.keys(chatData).length.toString(),
+        downloading.toString(),
+        total.toString(),
+        chatData[this.chat].total.toString(),
+      ]),
       parseMode: 'html',
     })
   }
@@ -168,13 +168,9 @@ class GeneralCommands {
         } catch (e) {
           console.error(`Delete file ${link} failed:`, e)
           if (e.message.includes("doesn't exist")) {
-            result = i18n
-              .t(this.lang, 'operationFailed')
-              .replace('{s}', i18n.t(this.lang, 'fileNotFound'))
+            result = i18n.t(this.lang, 'operationFailed', [i18n.t(this.lang, 'fileNotFound')])
           } else if (e.message.includes("didn't belong to")) {
-            result = i18n
-              .t(this.lang, 'operationFailed')
-              .replace('{s}', i18n.t(this.lang, 'fileWrongOwnership'))
+            result = i18n.t(this.lang, 'operationFailed', [i18n.t(this.lang, 'fileWrongOwnership')])
           } else result = i18n.t(this.lang, 'unknownError')
           await bot.sendMessage(this.chat, { message: result })
         }
@@ -197,7 +193,7 @@ class GeneralCommands {
       await bot.sendMessage(this.chat, { message: i18n.t(this.lang, 'setSuccess') })
     } else {
       await bot.sendMessage(this.chat, {
-        message: i18n.t(this.lang, 'help_token').replace('{t}', chatData[this.chat].token || '🚫'),
+        message: i18n.t(this.lang, 'help_token', [chatData[this.chat].token || '🚫']),
         parseMode: 'html',
         linkPreview: false,
       })

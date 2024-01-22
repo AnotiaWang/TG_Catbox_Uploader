@@ -24,7 +24,7 @@ export async function transfer(msg: Api.Message) {
   if (chatData[chat].banned) return bot.sendMessage(chat, { message: i18n.t(lang, 'error_banned') })
   else if (chatData[chat].downloading >= MAX_DOWNLOADING && chat !== ADMIN_ID)
     return bot.sendMessage(chat, {
-      message: i18n.t(lang, 'flood_protection').replace('{s}', MAX_DOWNLOADING),
+      message: i18n.t(lang, 'flood_protection', [MAX_DOWNLOADING.toString()]),
     })
 
   let file: Api.TypeDocument | Api.TypePhoto | Api.TypeWebDocument
@@ -77,7 +77,7 @@ export async function transfer(msg: Api.Message) {
     (service === 'Litterbox' && fileSize > 1000000000)
   )
     return bot.sendMessage(chat, {
-      message: i18n.t(lang, 'err_FileTooBig').replace('{s}', service),
+      message: i18n.t(lang, 'err_FileTooBig', [service]),
     })
 
   chatData[chat].downloading++
@@ -148,13 +148,12 @@ export async function transfer(msg: Api.Message) {
         const speed = +((downloaded - lastDownloadSize) / ((now - lastEditTime) / 1000)).toFixed(2)
         const percent = Math.round((downloaded / total) * 100)
         const text =
-          i18n
-            .t(lang, 'downloadProgress')
-            .replace('{1}', total.toString())
-            .replace('{2}', downloaded.toString())
-            .replace('{3}', speed.toString())
-            .replace('{4}', secToTime(Math.round((total - downloaded) / speed))) +
-          `\n\n<code>[${'●'.repeat(percent / 5.5)}${'○'.repeat(18 - percent / 5.5)}]</code>`
+          i18n.t(lang, 'downloadProgress', [
+            total.toString(),
+            downloaded.toString(),
+            speed.toString(),
+            secToTime(Math.round((total - downloaded) / speed)),
+          ]) + `\n\n<code>[${'●'.repeat(percent / 5.5)}${'○'.repeat(18 - percent / 5.5)}]</code>`
         lastEditTime = now
         lastDownloadSize = downloaded
 
@@ -172,7 +171,7 @@ export async function transfer(msg: Api.Message) {
     await bot
       .editMessage(chat, {
         message: editMsg.id,
-        text: i18n.t(lang, 'uploading').replace('{s}', service),
+        text: i18n.t(lang, 'uploading', [service]),
       })
       .catch(() => {})
 
@@ -191,13 +190,13 @@ export async function transfer(msg: Api.Message) {
     }
     const validity = chatData[chat]['lbe']
     const hour = validity === 1 ? i18n.t(lang, 'hour') : i18n.t(lang, 'hours')
-    const text = i18n
-      .t(lang, 'uploaded')
-      .replace('{1}', service)
-      .replace('{2}', (fileSize / 1000 / 1000).toFixed(2))
-      .replace('{3}', service.toLowerCase() === 'catbox' ? '∞' : `${validity} ${hour}`)
-      .replace('{4}', result)
-      .replace('{5}', BOT_NAME)
+    const text = i18n.t(lang, 'uploaded', [
+      service,
+      (fileSize / 1000 / 1000).toFixed(2),
+      service.toLowerCase() === 'catbox' ? '∞' : `${validity} ${hour}`,
+      result,
+      BOT_NAME,
+    ])
     try {
       await bot.sendMessage(chat, {
         message: text,

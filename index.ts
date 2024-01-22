@@ -27,7 +27,7 @@ await bot.start({
 })
 await bot.connect()
 
-export const BOT_NAME = ((await bot.getMe()) as Api.User).username
+export const BOT_NAME = ((await bot.getMe()) as Api.User).username!
 
 loadBotData()
 writeFileSync('./data/.session', bot.session.save() as unknown as string)

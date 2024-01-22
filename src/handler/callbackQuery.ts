@@ -1,10 +1,10 @@
 import i18n from '../i18n/index.js'
+import * as buttons from './buttons.js'
 import { bot } from '../../index.js'
+import { chatData, initChatData, saveBotData } from './data.js'
 import type { Api } from 'telegram'
 import type { LitterboxExpiration, StorageService } from '../types/data.js'
 import type { CallbackQueryEvent } from 'telegram/events/CallbackQuery.js'
-import * as buttons from './buttons.js'
-import { chatData, initChatData, saveBotData } from './data.js'
 
 // Callback query handler
 // I use callback queries in the format of: [callback function]_[argument]
@@ -45,7 +45,7 @@ export async function handleCallbackQuery(event: CallbackQueryEvent) {
     if (arg && arg === 'unbind') chatData[chat].token = ''
     text =
       `<b>${i18n.t(lang, 'token')}</b>\n\n` +
-      i18n.t(lang, 'help_token').replace('{t}', chatData[chat].token || '🚫')
+      i18n.t(lang, 'help_token', [chatData[chat].token || '🚫'])
     bt = buttons.setToken(chat)
   }
   saveBotData()
