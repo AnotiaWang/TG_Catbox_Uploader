@@ -142,7 +142,7 @@ class GeneralCommands {
       total += chatData[chat].total
     }
     await bot.sendMessage(this.chat, {
-      message: i18n.t(this.lang, 'settings', [
+      message: i18n.t(this.lang, 'stats', [
         Object.keys(chatData).length.toString(),
         downloading.toString(),
         total.toString(),
