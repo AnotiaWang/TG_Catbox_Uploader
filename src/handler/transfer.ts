@@ -177,23 +177,26 @@ export async function transfer(msg: Api.Message) {
 
     // Upload to Catbox / Litterbox
     let result: string
+    let validity: string
 
     if (service.toLowerCase() === 'catbox') {
+      validity = '∞'
       const client = new Catbox(chatData[chat].token || CATBOX_TOKEN || '')
       result = await client.uploadFile({ path: filePath })
     } else {
+      const lbe = chatData[chat].lbe
       const client = new Litterbox()
+
+      validity = `${lbe} ${i18n.t(lang, lbe === 1 ? 'hour' : 'hours')}`
       result = await client.upload({
         path: filePath,
-        duration: `${chatData[chat]['lbe']}h` as any,
+        duration: `${validity}h` as any,
       })
     }
-    const validity = chatData[chat]['lbe']
-    const hour = validity === 1 ? i18n.t(lang, 'hour') : i18n.t(lang, 'hours')
     const text = i18n.t(lang, 'uploaded', [
       service,
       (fileSize / 1000 / 1000).toFixed(2),
-      service.toLowerCase() === 'catbox' ? '∞' : `${validity} ${hour}`,
+      validity,
       result,
       BOT_NAME,
     ])
